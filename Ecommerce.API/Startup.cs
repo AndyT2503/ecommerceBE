@@ -1,6 +1,7 @@
 using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
+using Ecommerce.Infrastructure.MailNotify;
 using Ecommerce.Infrastructure.User;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,7 @@ namespace Ecommerce.API
             services.ConfigureCors();
             services.ConfigureMediaR();
             services.ConfigureAuthentication(Configuration);
+            services.ConfigureMailService(Configuration);
             services.ConfigureDbContext(Configuration);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -83,6 +85,14 @@ namespace Ecommerce.API
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
+        }
+
+        public static void ConfigureMailService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddOptions();
+            var mailSettings = configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailSettings);
+            services.AddTransient<IMailNotifyService, MailNotifyService>();
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
