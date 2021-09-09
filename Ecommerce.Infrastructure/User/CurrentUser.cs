@@ -19,6 +19,10 @@ namespace Ecommerce.Infrastructure.User
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Guid Id => new Guid(ClaimsPrincipal.FindFirst(ClaimTypes.Name).Value);
+        public Guid Id => new Guid(ClaimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        public string FullName => ClaimsPrincipal.FindFirst(ClaimTypes.Name).Value;
+
+        public string Role => ClaimsPrincipal.FindFirst(ClaimTypes.Role).Value;
     }
 }
