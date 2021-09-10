@@ -4,10 +4,7 @@ using Ecommerce.Infrastructure.Common;
 using Ecommerce.Infrastructure.LinQ;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,10 +30,10 @@ namespace Ecommerce.Application.Auth
                 Username = x.Username
             }).Page(request.PageIndex, request.PageSize).ToListAsync(cancellationToken);
             var totalCount = await query.CountAsync(cancellationToken);
-            return new PagingModel<UserDto>(users, totalCount, request.PageIndex, request.PageSize );
+            return new PagingModel<UserDto>(users, totalCount, request.PageIndex, request.PageSize);
         }
     }
-    public class GetUsersQuery: IRequest<PagingModel<UserDto>>
+    public class GetUsersQuery : IRequest<PagingModel<UserDto>>
     {
         public int PageIndex { get; init; }
         public int PageSize { get; init; }

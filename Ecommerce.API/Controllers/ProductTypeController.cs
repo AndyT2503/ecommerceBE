@@ -39,7 +39,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetProductTypes([FromQuery]GetProductTypeQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProductTypes([FromQuery] GetProductTypeQuery query, CancellationToken cancellationToken)
         {
             var res = await _mediator.Send(query, cancellationToken);
             return Ok(res);

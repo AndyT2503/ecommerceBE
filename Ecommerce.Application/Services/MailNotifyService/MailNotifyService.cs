@@ -1,13 +1,11 @@
-﻿using MailKit.Security;
+﻿using Ecommerce.Application.Services.MailNotifyService.Utils;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Infrastructure.MailNotify
+namespace Ecommerce.Application.Services.MailNotifyService
 {
     public class MailNotifyService : IMailNotifyService
     {
@@ -23,11 +21,11 @@ namespace Ecommerce.Infrastructure.MailNotify
             email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail);
             email.From.Add(new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail));
             email.To.Add(MailboxAddress.Parse(mailContent.To));
-            email.Subject = mailContent.Subject;
+            email.Subject = MailUtils.GetSubjectMail(mailContent.EventCode);
 
 
             var builder = new BodyBuilder();
-            builder.HtmlBody = mailContent.Body;
+            builder.HtmlBody = MailUtils.GetTemplateMail(mailContent.EventCode, mailContent.Data);
             email.Body = builder.ToMessageBody();
 
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
@@ -40,18 +38,18 @@ namespace Ecommerce.Infrastructure.MailNotify
             }
             catch (Exception ex)
             {
-                throw;
+                return;
             }
 
             smtp.Disconnect(true);
         }
-        public async Task SendMailAsync(string email, string subject, string htmlMessage)
+        public async Task SendMailAsync(string email, object data, string eventCode)
         {
             await SendMail(new MailContent()
             {
                 To = email,
-                Body = htmlMessage,
-                Subject = subject
+                Data = data,
+                EventCode = eventCode
             });
         }
     }

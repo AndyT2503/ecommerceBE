@@ -1,10 +1,8 @@
-﻿using Ecommerce.Domain;
-using Ecommerce.Infrastructure.MailNotify;
+﻿using Ecommerce.Application.Services.MailNotifyService;
+using Ecommerce.Domain;
+using Ecommerce.Domain.Const;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +21,12 @@ namespace Ecommerce.Application.Orders
         public async Task<Unit> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             //TODO: Implement Create Order
-            var subject = "Bạn đã khởi tạo đơn hàng thành công";
-            var body = "Test gửi email";
-            await _mailNotifyService.SendMailAsync(request.Email, subject, body);
+            var properties = new
+            {
+                Url = "test",
+                Name = "Tu"
+            };
+            await _mailNotifyService.SendMailAsync(request.Email, properties, NotifyEvent.CreateOrder);
             return Unit.Value;
         }
     }

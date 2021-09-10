@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mailTemplates>
+  <subject subject="Create_Order">Thông báo đơn hàng mới</subject>
+  <div id="Create_Order">
+    <p>Test Email #{properties.Url} </p>
+    <p style="color: red">Test name #{properties.Name} </p>
+  </div>
+</mailTemplates>

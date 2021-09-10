@@ -2,11 +2,8 @@
 using Ecommerce.Domain.Const;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +36,7 @@ namespace Ecommerce.API.Controllers
 
         [Authorize]
         [HttpGet("user-profile")]
-        public async Task<IActionResult> GetUserProfile([FromQuery]UserProfileQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserProfile([FromQuery] UserProfileQuery query, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(query, cancellationToken);
             return Ok(dto);
@@ -63,7 +60,7 @@ namespace Ecommerce.API.Controllers
 
         [Authorize(Roles = AppRole.SuperAdmin)]
         [HttpPut("users/{id}")]
-        public async Task<IActionResult> UpdateUserInfo(Guid id, [FromBody]UserUpdateDto body, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateUserInfo(Guid id, [FromBody] UserUpdateDto body, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(new UpdateUserCommand(id, body), cancellationToken);
             return Ok(dto);

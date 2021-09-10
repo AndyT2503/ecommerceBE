@@ -5,9 +5,7 @@ using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,14 +34,14 @@ namespace Ecommerce.Application.Suppliers
                         Id = x.ProductTypeId
                     })
                 }).FirstOrDefaultAsync(cancellationToken);
-            if(supplier is null)
+            if (supplier is null)
             {
                 throw new CoreException("Item not Found");
             }
             return supplier;
         }
     }
-    public record GetSupplierByIdQuery(Guid Id) :IRequest<SupplierDto>
+    public record GetSupplierByIdQuery(Guid Id) : IRequest<SupplierDto>
     {
     }
 }

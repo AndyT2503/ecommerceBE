@@ -3,9 +3,6 @@ using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +19,7 @@ namespace Ecommerce.Application.ProductTypes
         public async Task<Unit> Handle(UpdateProductTypeCommand request, CancellationToken cancellationToken)
         {
             var productType = await _mainDbContext.ProductTypes.FirstOrDefaultAsync(x => x.Id == request.Id);
-            if(productType is null)
+            if (productType is null)
             {
                 throw new CoreException("Item Not Found");
             }

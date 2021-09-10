@@ -1,7 +1,6 @@
+using Ecommerce.Application.Services.MailNotifyService;
 using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
-using Ecommerce.Domain.Model;
-using Ecommerce.Infrastructure.MailNotify;
 using Ecommerce.Infrastructure.User;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Ecommerce.API
 {
@@ -72,6 +69,7 @@ namespace Ecommerce.API
                 endpoints.MapControllers();
             });
         }
+
     }
 
     public static class ServiceExtensions
