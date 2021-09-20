@@ -34,6 +34,20 @@ namespace Ecommerce.Application.Auth
             {
                 throw new CoreException("Username or password is incorrect");
             }
+            var tokenString = GenerateToken(user);
+            return new UserLoginDto()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                AccessToken = tokenString,
+                Role = user.Role
+            };
+        }
+
+        private string GenerateToken(User user)
+        {
             var credential = _configuration["AppCredential"];
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(credential);
@@ -50,15 +64,7 @@ namespace Ecommerce.Application.Auth
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            return new UserLoginDto()
-            {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                AccessToken = tokenString,
-                Role = user.Role
-            };
+            return tokenString;
         }
     }
     public class LoginUserQuery : IRequest<UserLoginDto>
