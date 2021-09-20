@@ -5,7 +5,6 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace Ecommerce.Application.Products
             newProduct.OriginalPrice = request.OriginalPrice;
             foreach (var item in request.Categories)
             {
-                newProduct.Categories.Add(new Category() { Image = item.Image, Price = item.Price, Name = item.Name});
+                newProduct.Categories.Add(new Category() { Image = item.Image, Price = item.Price, Name = item.Name });
             }
             _mainDbContext.Products.Add(newProduct);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
@@ -42,7 +41,7 @@ namespace Ecommerce.Application.Products
 
         private string GenerateSlug(string productName)
         {
-            var slug = string.Join('_', productName);
+            var slug = string.Join('-', productName);
             return slug;
         }
     }

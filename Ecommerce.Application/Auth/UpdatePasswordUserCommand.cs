@@ -3,9 +3,6 @@ using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +28,7 @@ namespace Ecommerce.Application.Auth
             return Unit.Value;
         }
     }
-    public record UpdatePasswordUserCommand(Guid id, UserPasswordDto dto): IRequest<Unit>
+    public record UpdatePasswordUserCommand(Guid id, UserPasswordDto dto) : IRequest<Unit>
     {
     }
 

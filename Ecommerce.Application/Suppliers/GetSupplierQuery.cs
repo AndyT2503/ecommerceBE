@@ -23,12 +23,12 @@ namespace Ecommerce.Application.Suppliers
         {
             var query = _mainDbContext.Suppliers.AsNoTracking()
                 .WhereIf(!string.IsNullOrEmpty(request.Name), i => EF.Functions.ILike(i.Name, $"%{request.Name}%")).Select(x => new SupplierDto
-            {
-                Id = x.Id,
-                Logo = x.Logo,
-                Name = x.Name,
-                Code = x.Code
-            });
+                {
+                    Id = x.Id,
+                    Logo = x.Logo,
+                    Name = x.Name,
+                    Code = x.Code
+                });
             var totalCount = await query.CountAsync(cancellationToken);
             var suppliers = new List<SupplierDto>();
             if (request.PageIndex is not null && request.PageSize is not null)
