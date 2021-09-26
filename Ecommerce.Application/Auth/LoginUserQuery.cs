@@ -27,10 +27,17 @@ namespace Ecommerce.Application.Auth
 
         public async Task<UserLoginDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username && x.Password == request.Password, cancellationToken);
+            
+            var user = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username, cancellationToken);
             if (user is null)
             {
-                throw new CoreException("Username or password is incorrect");
+                throw new CoreException("Username is incorrect");
+            }
+            // Check passWord
+            bool verified = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+            if (!verified)
+            {
+                throw new CoreException("Password is incorrect");
             }
             var tokenString = GenerateToken(user);
             return new UserLoginDto()
