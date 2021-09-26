@@ -15,5 +15,7 @@ namespace Ecommerce.Application.Products.Dto
         public IEnumerable<string> SpecialFeatures { get; init; }
         public string SupplierName { get; init; }
         public string ProductTypeName { get; init; }
+        public string Image { get; init; }
+        public decimal? CurrentPrice { get; init; }
     }
 }

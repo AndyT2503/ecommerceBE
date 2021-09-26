@@ -24,6 +24,7 @@ namespace Ecommerce.Application.Products
             var query = _mainDbContext.Products.AsNoTracking()
                 .Include(x => x.ProductType)
                 .Include(x => x.Supplier)
+                .Include(x => x.Categories)
                 .Where(i => EF.Functions.ILike(i.Name, $"%{request.Name}%")).Select(x => new ProductDto
                 {
                     Id = x.Id,
@@ -35,7 +36,9 @@ namespace Ecommerce.Application.Products
                     ProductTypeName = x.ProductType.Name,
                     SpecialFeatures = x.SpecialFeatures,
                     Status = x.Status,
-                    SupplierName = x.Supplier.Name
+                    SupplierName = x.Supplier.Name,
+                    CurrentPrice = x.Categories.OrderBy(i => i.Price).First().Price,
+                    Image = x.Categories.OrderBy(i => i.Price).First().Image
                 });
             var totalCount = await query.CountAsync(cancellationToken);
             var products = new List<ProductDto>();

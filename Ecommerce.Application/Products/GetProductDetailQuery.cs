@@ -42,7 +42,14 @@ namespace Ecommerce.Application.Products
                     SupplierName = x.Supplier.Name,
                     Configuration = x.Configuration,
                     ProductTypeId = x.ProductTypeId,
-                    SupplierId = x.SupplierId
+                    SupplierId = x.SupplierId,
+                    Categories = x.Categories.Select( i => new ProductCategoryDto
+                    {
+                        Id = i.Id,
+                        Image = i.Image,
+                        Name = i.Name,
+                        Price = i.Price
+                    })
                 }).FirstOrDefaultAsync(x => x.Slug == request.slug, cancellationToken);
             if(product is null)
             {

@@ -56,6 +56,6 @@ namespace Ecommerce.Application.Products
         public Guid SupplierId { get; init; }
         public Guid ProductTypeId { get; init; }
         public object Configuration { get; init; }
-        public IEnumerable<CreateProductCategoryDto> Categories { get; init; }
+        public IEnumerable<ProductCategoryDto> Categories { get; init; }
     }
 }
