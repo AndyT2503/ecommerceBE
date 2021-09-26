@@ -1,4 +1,5 @@
-﻿using Ecommerce.Application.Suppliers;
+using Ecommerce.Application.Services.MailNotifyService;
+using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.User;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Ecommerce.API
 {
@@ -37,6 +36,7 @@ namespace Ecommerce.API
             services.ConfigureCors();
             services.ConfigureMediaR();
             services.ConfigureAuthentication(Configuration);
+            services.ConfigureMailService(Configuration);
             services.ConfigureDbContext(Configuration);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -104,6 +104,7 @@ namespace Ecommerce.API
                 }
             }
         }
+
     }
 
     public static class ServiceExtensions
@@ -117,6 +118,14 @@ namespace Ecommerce.API
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
+        }
+
+        public static void ConfigureMailService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddOptions();
+            var mailSettings = configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailSettings);
+            services.AddTransient<IMailNotifyService, MailNotifyService>();
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
