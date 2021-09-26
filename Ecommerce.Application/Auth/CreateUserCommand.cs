@@ -17,13 +17,15 @@ namespace Ecommerce.Application.Auth
         }
 
         public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
-        {
+        {           
             var isValidateUser = await ValidateUser(request.Username, cancellationToken);
             if (!isValidateUser)
             {
                 throw new CoreException("Username đã tồn tại");
             }
-            var newUser = new User() { FirstName = request.FirstName, LastName = request.LastName, Role = request.Role, Username = request.Username, Password = request.Password };
+            // Hash password
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var newUser = new User() { FirstName = request.FirstName, LastName = request.LastName, Role = request.Role, Username = request.Username, Password = passwordHash };
             _mainDbContext.Users.Add(newUser);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;

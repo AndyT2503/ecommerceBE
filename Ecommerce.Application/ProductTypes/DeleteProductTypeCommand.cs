@@ -28,7 +28,5 @@ namespace Ecommerce.Application.ProductTypes
             return Unit.Value;
         }
     }
-    public record DeleteProductTypeCommand(Guid Id) : IRequest<Unit>
-    {
-    }
+    public record DeleteProductTypeCommand(Guid Id) : IRequest<Unit>;
 }

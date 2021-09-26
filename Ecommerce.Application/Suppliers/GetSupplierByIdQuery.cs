@@ -41,7 +41,5 @@ namespace Ecommerce.Application.Suppliers
             return supplier;
         }
     }
-    public record GetSupplierByIdQuery(Guid Id) : IRequest<SupplierDto>
-    {
-    }
+    public record GetSupplierByIdQuery(Guid Id) : IRequest<SupplierDto>;
 }

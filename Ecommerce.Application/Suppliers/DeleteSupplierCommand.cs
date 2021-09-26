@@ -28,7 +28,5 @@ namespace Ecommerce.Application.Suppliers
             return Unit.Value;
         }
     }
-    public record DeleteSupplierCommand(Guid Id) : IRequest<Unit>
-    {
-    }
+    public record DeleteSupplierCommand(Guid Id) : IRequest<Unit>;
 }

@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.Auth.Dto;
 using Ecommerce.Domain;
+using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,32 @@ namespace Ecommerce.Application.Auth
 
         public async Task<UserLoginDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username && x.Password == request.Password, cancellationToken);
+            
+            var user = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username, cancellationToken);
             if (user is null)
             {
-                throw new CoreException("Username or password is incorrect");
+                throw new CoreException("Username is incorrect");
             }
+            // Check passWord
+            bool verified = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+            if (!verified)
+            {
+                throw new CoreException("Password is incorrect");
+            }
+            var tokenString = GenerateToken(user);
+            return new UserLoginDto()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                AccessToken = tokenString,
+                Role = user.Role
+            };
+        }
+
+        private string GenerateToken(User user)
+        {
             var credential = _configuration["AppCredential"];
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(credential);
@@ -47,15 +69,7 @@ namespace Ecommerce.Application.Auth
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            return new UserLoginDto()
-            {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                AccessToken = tokenString,
-                Role = user.Role
-            };
+            return tokenString;
         }
     }
     public class LoginUserQuery : IRequest<UserLoginDto>
