@@ -1,4 +1,4 @@
-using Ecommerce.Application.Suppliers;
+﻿using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.User;
@@ -47,8 +47,11 @@ namespace Ecommerce.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
+            lifetime.ApplicationStarted.Register(
+            () => ConfigUserDb(app));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -69,6 +72,37 @@ namespace Ecommerce.API
             {
                 endpoints.MapControllers();
             });
+            static void ConfigUserDb(IApplicationBuilder app)
+            {
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<MainDbContext>();
+
+                    var users = context.Users.ToListAsync().Result;
+                    if (users.Count == 0)
+                    {
+                        var newUser = new User() { FirstName = "admin", LastName = "super", Role = "super_admin", Username = "admin", Password = BCrypt.Net.BCrypt.HashPassword("admin") };
+                        context.Users.Add(newUser);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        foreach (User user in users)
+                        {
+                            try
+                            {
+                                BCrypt.Net.BCrypt.Verify("admin", user.Password);
+                            }
+                            catch
+                            {
+                                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                                context.Update(user);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -144,4 +178,5 @@ namespace Ecommerce.API
             });
         }
     }
+    
 }
