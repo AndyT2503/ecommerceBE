@@ -5,11 +5,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,7 +40,7 @@ namespace Ecommerce.Application.Products
                     Configuration = x.Configuration,
                     ProductTypeId = x.ProductTypeId,
                     SupplierId = x.SupplierId,
-                    Categories = x.Categories.Select( i => new ProductCategoryDto
+                    Categories = x.Categories.Select(i => new ProductCategoryDto
                     {
                         Id = i.Id,
                         Image = i.Image,
@@ -51,7 +48,7 @@ namespace Ecommerce.Application.Products
                         Price = i.Price
                     })
                 }).FirstOrDefaultAsync(x => x.Slug == request.slug, cancellationToken);
-            if(product is null)
+            if (product is null)
             {
                 throw new CoreException("Product is not found");
             }

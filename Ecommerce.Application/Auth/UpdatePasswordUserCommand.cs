@@ -22,8 +22,8 @@ namespace Ecommerce.Application.Auth
             if (user is null)
             {
                 throw new CoreException("User không tồn tại");
-            }            
-            user.Password = BCrypt.Net.BCrypt.HashPassword(request.dto.NewPassword); 
+            }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.dto.NewPassword);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

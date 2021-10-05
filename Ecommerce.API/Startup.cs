@@ -1,3 +1,4 @@
+using Ecommerce.Application.Services.AuthService;
 using Ecommerce.Application.Services.MailNotifyService;
 using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
@@ -44,6 +45,7 @@ namespace Ecommerce.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce.API", Version = "v1" });
             });
             services.AddSingleton<ICurrentUser, CurrentUser>();
+            services.AddSingleton<AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -190,5 +192,5 @@ namespace Ecommerce.API
             }
         }
     }
-    
+
 }

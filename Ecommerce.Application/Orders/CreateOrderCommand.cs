@@ -2,7 +2,6 @@
 using Ecommerce.Domain;
 using Ecommerce.Domain.Const;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

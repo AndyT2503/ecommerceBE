@@ -17,7 +17,7 @@ namespace Ecommerce.Application.Auth
         }
 
         public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
-        {           
+        {
             var isValidateUser = await ValidateUser(request.Username, cancellationToken);
             if (!isValidateUser)
             {

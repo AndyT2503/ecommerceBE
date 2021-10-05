@@ -1,10 +1,6 @@
 ﻿using Ecommerce.Application.Products;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +24,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProduct([FromQuery]GetProductQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProduct([FromQuery] GetProductQuery query, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(query, cancellationToken);
             return Ok(dto);

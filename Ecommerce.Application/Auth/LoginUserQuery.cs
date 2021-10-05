@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Auth.Dto;
+using Ecommerce.Application.Services.AuthService;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.Exceptions;
@@ -19,15 +20,17 @@ namespace Ecommerce.Application.Auth
     {
         private readonly MainDbContext _mainDbContext;
         private readonly IConfiguration _configuration;
-        public LoginUserHandler(MainDbContext mainDbContext, IConfiguration configuration)
+        private readonly AuthService _authService;
+        public LoginUserHandler(MainDbContext mainDbContext, IConfiguration configuration, AuthService authService)
         {
             _mainDbContext = mainDbContext;
             _configuration = configuration;
+            _authService = authService;
         }
 
         public async Task<UserLoginDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            
+
             var user = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username, cancellationToken);
             if (user is null)
             {
@@ -39,7 +42,7 @@ namespace Ecommerce.Application.Auth
             {
                 throw new CoreException("Password is incorrect");
             }
-            var tokenString = GenerateToken(user);
+            var tokenString = _authService.GenerateToken(user);
             return new UserLoginDto()
             {
                 Id = user.Id,
@@ -49,27 +52,6 @@ namespace Ecommerce.Application.Auth
                 AccessToken = tokenString,
                 Role = user.Role
             };
-        }
-
-        private string GenerateToken(User user)
-        {
-            var credential = _configuration["AppCredential"];
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(credential);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role),
-                    new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
-                }),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            return tokenString;
         }
     }
     public class LoginUserQuery : IRequest<UserLoginDto>
