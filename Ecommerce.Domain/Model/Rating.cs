@@ -6,6 +6,7 @@ namespace Ecommerce.Domain.Model
 {
     public class Rating : BaseModel
     {
+        public string UserName { get; set; }
         public string Comment { get; set; }
         public int Rate { get; set; }
         public string ImageUrl { get; set; }
@@ -22,6 +23,7 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.Rate);
             builder.HasIndex(x => x.ProductId);
             builder.HasIndex(x => x.ImageUrl);
+            builder.HasIndex(x => x.UserName);
             builder.HasOne(x => x.Product).WithMany(x => x.Ratings).HasForeignKey(x => x.ProductId);
         }
     }
