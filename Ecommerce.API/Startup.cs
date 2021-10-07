@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Net;
 using System.Text;
 
@@ -35,7 +36,7 @@ namespace Ecommerce.API
         {
             services.AddHttpContextAccessor();
             services.ConfigureCors();
-            services.ConfigureMediaR();
+            services.ConfigureMediatR();
             services.ConfigureAuthentication(Configuration);
             services.ConfigureMailService(Configuration);
             services.ConfigureDbContext(Configuration);
@@ -106,10 +107,11 @@ namespace Ecommerce.API
             services.AddDbContext<MainDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Ecommerce")));
         }
 
-        public static void ConfigureMediaR(this IServiceCollection services)
+        public static void ConfigureMediatR(this IServiceCollection services)
         {
             //Register Assembly Where All Handlers Stored
-            services.AddMediatR(typeof(CreateSupplierCommand));
+            var assembly = AppDomain.CurrentDomain.Load("Ecommerce.Application");
+            services.AddMediatR(assembly);
         }
 
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
