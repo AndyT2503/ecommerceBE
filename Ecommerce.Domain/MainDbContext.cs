@@ -18,10 +18,12 @@ namespace Ecommerce.Domain
         public DbSet<ChildComment> ChildComments { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<SupplierProductType> SupplierProductTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         public DbSet<SaleCode> SaleCodes { get; set; }
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ecommerce.Domain.Model
 {
+  //  [Table("Order")]
     public class Order : BaseModel
     {
         public string OrderCode { get; set; }
