@@ -1,5 +1,7 @@
 using Ecommerce.Application.Services.AuthService;
 using Ecommerce.Application.Services.MailNotifyService;
+using Ecommerce.Application.Services.Socket.Hubs;
+using Ecommerce.Application.Services.Socket.SocketService;
 using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
@@ -45,6 +47,8 @@ namespace Ecommerce.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce.API", Version = "v1" });
             });
+            services.ConfigureSocketService();
+
             services.AddSingleton<ICurrentUser, CurrentUser>();
             services.AddSingleton<AuthService>();
         }
@@ -61,7 +65,7 @@ namespace Ecommerce.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ecommerce.API v1"));
             }
-            app.UseCors("AllowAllOrigin");
+            app.UseCors("CorsPolicy");
             app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
@@ -74,6 +78,7 @@ namespace Ecommerce.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/notification-hub");
             });
 
             app.ConfigUserDb();
@@ -87,10 +92,12 @@ namespace Ecommerce.API
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigin",
-                    builder => builder.AllowAnyOrigin()
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost:4500")
                     .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    );
             });
         }
 
@@ -112,6 +119,12 @@ namespace Ecommerce.API
             //Register Assembly Where All Handlers Stored
             var assembly = AppDomain.CurrentDomain.Load("Ecommerce.Application");
             services.AddMediatR(assembly);
+        }
+
+        public static void ConfigureSocketService(this IServiceCollection services)
+        {
+            services.AddSignalR();
+            services.AddScoped<SocketService>();
         }
 
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
