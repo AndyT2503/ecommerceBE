@@ -51,5 +51,12 @@ namespace Ecommerce.API.Controllers
             var dto = await _mediator.Send(command, cancellationToken);
             return Ok(dto);
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllSupplier([FromQuery] GetAllSupplierQuery query, CancellationToken cancellationToken)
+        {
+            var res = await _mediator.Send(query, cancellationToken);
+            return Ok(res);
+        }
     }
 }
