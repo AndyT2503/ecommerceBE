@@ -111,7 +111,7 @@ namespace Ecommerce.API
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MainDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Ecommerce")));
+            services.AddDbContext<MainDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Ecommerce")).EnableSensitiveDataLogging());
         }
 
         public static void ConfigureMediatR(this IServiceCollection services)
