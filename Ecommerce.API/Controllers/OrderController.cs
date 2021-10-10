@@ -16,8 +16,15 @@ namespace Ecommerce.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder(CreateOrderCommand command, CancellationToken cancellationToken)
+        //[HttpPost]
+        //public async Task<IActionResult> CreateOrder(CreateOrderCommand command, CancellationToken cancellationToken)
+        //{
+        //    var dto = await _mediator.Send(command, cancellationToken);
+        //    return Ok(dto);
+        //}
+
+        [HttpPost("Order")]
+        public async Task<IActionResult> CreateSupplier(CreateOrderCommand command, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(command, cancellationToken);
             return Ok(dto);
