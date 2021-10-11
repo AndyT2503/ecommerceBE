@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Orders.Dto
 {
-    public class OrderDto
+    public class CreateOrderDetailDto
     {
         public Guid CategoryId { get; set; }
-        public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
 }
