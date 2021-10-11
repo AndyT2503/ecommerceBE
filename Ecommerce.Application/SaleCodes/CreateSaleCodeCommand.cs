@@ -4,9 +4,6 @@ using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +31,7 @@ namespace Ecommerce.Application.SaleCodes
             if (!isValidateSaleCode)
             {
                 throw new CoreException("Mã giảm giá đã tồn tại");
-            }            
+            }
             var newSaleCode = new SaleCode() { Code = request.Code, Percent = request.Percent, MaxPrice = request.MaxPrice, ValidUntil = request.ValidUntil };
             _mainDbContext.SaleCodes.Add(newSaleCode);
             await _mainDbContext.SaveChangesAsync(cancellationToken);

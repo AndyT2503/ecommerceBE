@@ -1,16 +1,10 @@
 ﻿using Ecommerce.Application.Auth.Dto;
 using Ecommerce.Application.Services.AuthService;
 using Ecommerce.Domain;
-using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

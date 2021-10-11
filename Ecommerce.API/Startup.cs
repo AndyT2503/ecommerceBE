@@ -1,8 +1,8 @@
 using Ecommerce.Application.Services.AuthService;
 using Ecommerce.Application.Services.MailNotifyService;
+using Ecommerce.Application.Services.NotificationService;
 using Ecommerce.Application.Services.Socket.Hubs;
 using Ecommerce.Application.Services.Socket.SocketService;
-using Ecommerce.Application.Suppliers;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.User;
@@ -109,9 +109,14 @@ namespace Ecommerce.API
             services.AddTransient<IMailNotifyService, MailNotifyService>();
         }
 
+        public static void ConfigureNotificationService(this IServiceCollection services)
+        {
+            services.AddSingleton<NotificationService>();
+        }
+
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MainDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Ecommerce")));
+            services.AddDbContext<MainDbContext>(o => o.UseNpgsql(configuration.GetConnectionString("Ecommerce")).EnableSensitiveDataLogging());
         }
 
         public static void ConfigureMediatR(this IServiceCollection services)
