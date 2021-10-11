@@ -36,6 +36,7 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.PaymentMethod);
             builder.HasIndex(x => x.Address);
             builder.HasIndex(x => x.Status);
+            builder.HasIndex(x => x.CreatedAt);
             builder.Property(x => x.Status).IsRequired().HasDefaultValueSql("'Waiting'::text");
             builder.HasOne(x => x.Sale).WithMany().HasForeignKey(x => x.SaleCode).OnDelete(DeleteBehavior.ClientNoAction);
         }

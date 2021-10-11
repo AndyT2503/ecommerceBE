@@ -7,6 +7,7 @@ namespace Ecommerce.Domain.Model
 {
     public class Comment : BaseModel
     {
+        public Guid? UserId { get; set; }
         public string Username { get; set; }
         public bool IsAdmin { get; set; }
         public string Content { get; set; }
@@ -24,6 +25,7 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.Content);
             builder.HasIndex(x => x.ProductId);
             builder.HasIndex(x => x.IsAdmin);
+            builder.HasIndex(x => x.UserId);
             builder.HasOne(d => d.Product).WithMany(d => d.Comments).HasForeignKey(d => d.ProductId).OnDelete(DeleteBehavior.Cascade);
         }
     }
