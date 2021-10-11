@@ -33,7 +33,7 @@ namespace Ecommerce.Application.Ratings
         {
             var isExist = await CheckProductExist(request.ProductId, cancellationToken);
 
-            if (isExist == false)
+            if (!isExist)
             {
                 throw new CoreException("Mã sản phẩm không tồn tại.");
             }
