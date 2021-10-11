@@ -6,6 +6,7 @@ using Ecommerce.Domain.Const;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Ecommerce.Application.Orders.Dto;
 using Ecommerce.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,41 +24,25 @@ namespace Ecommerce.Application.Orders
 
         public async Task<Unit> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var Order = new Order();
-            Order.OrderCode = request.OrderCode;
-            Order.Email = request.Email;
-            Order.PhoneNumber = request.PhoneNumber;
-            Order.ProvinceCode = request.ProvinceCode;
-            Order.DistrictCode = request.DistrictCode;
-            Order.Address = request.Address;
-            Order.Note = request.Note;
-            Order.CustomerName = request.CustomerName;
-            Order.SaleCode = request.SaleCode;
-            Order.Price = request.Price;
-            Order.PaymentMethod = request.PaymentMethod;
-            Order.PaymentStatus = request.PaymentStatus;
-            Order.Status = request.Status;
-            _mainDbContext.Orders.Add(Order);
+            var order = new Order();
+            order.OrderCode = request.OrderCode;
+            order.Email = request.Email;
+            order.PhoneNumber = request.PhoneNumber;
+            order.ProvinceCode = request.ProvinceCode;
+            order.DistrictCode = request.DistrictCode;
+            order.Address = request.Address;
+            order.Note = request.Note;
+            order.CustomerName = request.CustomerName;
+            order.SaleCode = request.SaleCode;
+            order.Price = request.Price;
+            order.PaymentMethod = request.PaymentMethod;
+            order.PaymentStatus = request.PaymentStatus;
+            order.Status = request.Status;
             foreach (var item in request.OrderDetails)
             {
-                var orderDetails =
-                    await _mainDbContext.OrderDetails.FirstOrDefaultAsync(x => x.Id == item, cancellationToken);
-                if (orderDetails is null)
-                {
-                    continue;
-                }
-
-                var addOrderDetail = new OrderDetail()
-                {
-                    OrderId = Order.Id,
-                    CategoryId = orderDetails.CategoryId,
-                    Price = orderDetails.Price,
-                    Quantity = orderDetails.Quantity,
-
-                };
-                _mainDbContext.OrderDetails.Add(orderDetails);
-
+                order.OrderDetails.Add(new OrderDetail() { CategoryId = item.CategoryId, Price = item.Price, Quantity = item.Quantity });
             }
+            _mainDbContext.Orders.Add(order);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
@@ -77,6 +62,6 @@ namespace Ecommerce.Application.Orders
         public string PaymentMethod { get; init; }
         public string PaymentStatus { get; init; }
         public string Status { get; init; }
-        public virtual ICollection<Guid> OrderDetails { get; init; }
+        public virtual ICollection<OrderDto> OrderDetails { get; init; }
     }
 }

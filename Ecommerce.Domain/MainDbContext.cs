@@ -13,6 +13,7 @@ namespace Ecommerce.Domain
         public const string ProductSchema = "product";
         public const string OrderSchema = "order";
         public const string AuthSchema = "auth";
+        public const string NotifySchema = "notification";
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ChildComment> ChildComments { get; set; }
@@ -22,6 +23,7 @@ namespace Ecommerce.Domain
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<SupplierProductType> SupplierProductTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<SaleCode> SaleCodes { get; set; }
