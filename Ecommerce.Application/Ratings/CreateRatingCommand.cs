@@ -4,9 +4,6 @@ using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +43,7 @@ namespace Ecommerce.Application.Ratings
             var rating = new Rating() { Comment = request.Comment, Rate = request.Rate, ImageUrl = request.ImageUrl, UserName = request.UserName, ProductId = request.ProductId };
             _mainDbContext.Ratings.Add(rating);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
-                
+
             return Unit.Value;
         }
 

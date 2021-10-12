@@ -10,7 +10,7 @@ namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] 
+    [Authorize]
     public class NotificationController : ControllerBase
     {
         private readonly IMediator _mediator;
