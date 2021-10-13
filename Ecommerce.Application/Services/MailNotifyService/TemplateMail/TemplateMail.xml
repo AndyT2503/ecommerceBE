@@ -2,7 +2,10 @@
 <mailTemplates>
   <subject subject="Create_Order">Thông báo đơn hàng mới</subject>
   <div id="Create_Order">
-    <p>Test Email #{properties.Url} </p>
-    <p style="color: red">Test name #{properties.Name} </p>
+    <p>Test Email {{ Name.user }} </p>
+    {% for order in Orders  %}
+    <p style="color: red">Id: {{ order.id }} </p>
+    <p style="color: red">Name: {{ order.name }} </p>
+    {% endfor %}
   </div>
 </mailTemplates>
