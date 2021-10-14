@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using DotLiquid;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Ecommerce.Application.Services.MailNotifyService.Utils
@@ -41,14 +41,9 @@ namespace Ecommerce.Application.Services.MailNotifyService.Utils
 
         private static string SetEmailProperties(string mailTemplate, object properties)
         {
-            foreach (var item in properties.GetType().GetProperties())
-            {
-                var valueReplace = properties.GetType().GetProperty(item.Name).GetValue(properties).ToString();
-                string regexPattern = @"\s*#{properties\." + item.Name + @"}\s";
-                mailTemplate = Regex.Replace(mailTemplate, regexPattern, $" {valueReplace} ");
-
-            }
-            return mailTemplate;
+            var template = Template.Parse(mailTemplate);
+            var jsonHash = Hash.FromAnonymousObject(properties);
+            return template.Render(jsonHash);
         }
     }
 }

@@ -6,6 +6,10 @@ namespace Ecommerce.Domain.Model
 {
     public class Order : BaseModel
     {
+        public Order()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+        }
         public string OrderCode { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
