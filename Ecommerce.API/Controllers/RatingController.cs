@@ -22,5 +22,12 @@ namespace Ecommerce.API.Controllers
             var dto = await _mediator.Send(command, cancellationToken);
             return Ok(dto);
         }
+
+        [HttpGet("products/{slug}")]
+        public async Task<IActionResult> GetRatings([FromQuery] GetRatingDto query, string slug, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(new GetRatingQuery(slug, query), cancellationToken);
+            return Ok(dto);
+        }
     }
 }
