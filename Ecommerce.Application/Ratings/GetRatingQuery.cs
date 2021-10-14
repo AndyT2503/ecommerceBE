@@ -44,13 +44,12 @@ namespace Ecommerce.Application.Ratings
 
             return new PagingModel<RatingDto>(ratings, totalCount, request.dto.PageIndex.GetValueOrDefault(), request.dto.PageSize.GetValueOrDefault());
         }
+    }
 
-        public record GetRatingQuery(string slug, GetRatingDto dto) : IRequest<PagingModel<RatingDto>> { }
-        public class GetRatingDto
-        {
-            public int? PageSize { get; init; }
-            public int? PageIndex { get; init; }
-        }
-
+    public record GetRatingQuery(string slug, GetRatingDto dto) : IRequest<PagingModel<RatingDto>> { }
+    public class GetRatingDto
+    {
+        public int? PageSize { get; init; }
+        public int? PageIndex { get; init; }
     }
 }
