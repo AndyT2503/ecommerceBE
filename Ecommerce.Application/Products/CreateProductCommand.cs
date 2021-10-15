@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.Products.Dto;
 using Ecommerce.Domain;
+using Ecommerce.Domain.Helper;
 using Ecommerce.Domain.Model;
 using MediatR;
 using System;
@@ -22,7 +23,7 @@ namespace Ecommerce.Application.Products
         {
             var newProduct = new Product();
             newProduct.Name = request.Name;
-            newProduct.Slug = GenerateSlug(request.Name);
+            newProduct.Slug = StringHelper.GenerateSlug(request.Name);
             newProduct.Description = request.Description;
             newProduct.Status = request.Status;
             newProduct.SpecialFeatures = request.SpecialFeatures.ToList();
@@ -37,13 +38,6 @@ namespace Ecommerce.Application.Products
             _mainDbContext.Products.Add(newProduct);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
-        }
-
-        private string GenerateSlug(string productName)
-        {
-            productName = productName.Trim();
-            var slug = productName.Replace(" ", "-");
-            return slug;
         }
     }
     public class CreateProductCommand : IRequest<Unit>
