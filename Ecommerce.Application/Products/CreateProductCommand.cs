@@ -41,7 +41,8 @@ namespace Ecommerce.Application.Products
 
         private string GenerateSlug(string productName)
         {
-            var slug = string.Join('-', productName);
+            productName = productName.Trim();
+            var slug = productName.Replace(" ", "-");
             return slug;
         }
     }
