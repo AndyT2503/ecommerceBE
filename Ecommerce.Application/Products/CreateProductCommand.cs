@@ -2,7 +2,9 @@
 using Ecommerce.Domain;
 using Ecommerce.Domain.Helper;
 using Ecommerce.Domain.Model;
+using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,11 @@ namespace Ecommerce.Application.Products
 
         public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            var validateMess = await ValidateSlug(request.Name, cancellationToken);
+            if (!validateMess.Equals(""))
+            {
+                throw new CoreException(validateMess);
+            }
             var newProduct = new Product();
             newProduct.Name = request.Name;
             newProduct.Slug = StringHelper.GenerateSlug(request.Name);
@@ -31,6 +38,7 @@ namespace Ecommerce.Application.Products
             newProduct.ProductTypeId = request.ProductTypeId;
             newProduct.Configuration = request.Configuration;
             newProduct.OriginalPrice = request.OriginalPrice;
+            newProduct.AvailableStatus = request.AvailableStatus;
             foreach (var item in request.Categories)
             {
                 newProduct.Categories.Add(new Category() { Image = item.Image, Price = item.Price, Name = item.Name });
@@ -38,6 +46,16 @@ namespace Ecommerce.Application.Products
             _mainDbContext.Products.Add(newProduct);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
+        }
+        private async Task<string> ValidateSlug(string name, CancellationToken cancellationToken)
+        {
+            var slug = StringHelper.GenerateSlug(name);
+            var product = await _mainDbContext.Products.AsNoTracking().FirstOrDefaultAsync(v => v.Slug == slug, cancellationToken);
+            if (product is not null)
+            {
+                return "Tên sản phẩm đã tồn tại! Vui lòng thay đổi ";
+            }
+            return "";
         }
     }
     public class CreateProductCommand : IRequest<Unit>

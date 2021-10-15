@@ -25,6 +25,8 @@ namespace Ecommerce.Application.Products
                 .Include(x => x.ProductType)
                 .Include(x => x.Supplier)
                 .Include(x => x.Categories)
+                //var total=db.tblCartItems.Where(t=>t.CartId == cartId).Sum(i=>i.Price);
+                .Include(x => x.Ratings)
                 .Where(i => EF.Functions.ILike(i.Name, $"%{request.Name}%")).Select(x => new ProductDto
                 {
                     Id = x.Id,
@@ -38,7 +40,9 @@ namespace Ecommerce.Application.Products
                     Status = x.Status,
                     SupplierName = x.Supplier.Name,
                     CurrentPrice = x.Categories.OrderBy(i => i.Price).First().Price,
-                    Image = x.Categories.OrderBy(i => i.Price).First().Image
+                    Image = x.Categories.OrderBy(i => i.Price).First().Image,
+                    MediumRate = x.Ratings.Count() == 0 ? 5 : (x.Ratings.Sum(x => x.Rate)) / (x.Ratings.Count()),
+                    CountRate = x.Ratings.Count()
                 });
             var totalCount = await query.CountAsync(cancellationToken);
             var products = new List<ProductDto>();

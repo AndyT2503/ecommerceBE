@@ -17,5 +17,9 @@ namespace Ecommerce.Application.Products.Dto
         public string ProductTypeName { get; init; }
         public string Image { get; init; }
         public decimal? CurrentPrice { get; init; }
+
+        public float MediumRate { get; init; }
+
+        public int CountRate { get; init; }
     }
 }
