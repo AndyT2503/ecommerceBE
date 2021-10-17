@@ -52,7 +52,7 @@ namespace Ecommerce.Application.Products
             {
                 throw new CoreException("Product is not found");
             }
-            product.Configuration = JsonConvert.DeserializeObject<ExpandoObject>(product.Configuration.ToString(), new ExpandoObjectConverter());
+            product.Configuration = JsonConvert.DeserializeObject<ExpandoObject[]>(product.Configuration.ToString(), new ExpandoObjectConverter());
             return product;
         }
     }
