@@ -45,8 +45,6 @@ namespace Ecommerce.Application.Auth
 
             var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId)
                                                        , cancellationToken);
-
-
             var verified = BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.Password);
             if (!verified)
             {
