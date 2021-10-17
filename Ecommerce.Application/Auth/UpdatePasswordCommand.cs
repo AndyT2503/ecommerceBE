@@ -33,12 +33,12 @@ namespace Ecommerce.Application.Auth
         {
             if (request.NewPassword.Equals("") || request.CurrentPassword.Equals(""))
             {
-                throw new CoreException("Username hoặc password trống ");
+                throw new CoreException("Username or password cannot be left blank ");
             }
 
             if (request.NewPassword == request.CurrentPassword)
             {
-                throw new CoreException(" Mật khẩu mới không được trùng mật khẩu cũ  ");
+                throw new CoreException(" The new password cannot be the same as the old password  ");
             }
 
             var userId = _currentUser.Id;
@@ -50,7 +50,7 @@ namespace Ecommerce.Application.Auth
             var verified = BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.Password);
             if (!verified)
             {
-                throw new CoreException(" Mat khau hien tai khong dung ");
+                throw new CoreException(" Current password is incorrect ");
             }
 
 
