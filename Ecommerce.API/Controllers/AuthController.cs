@@ -51,7 +51,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [Authorize(Roles = AppRole.SuperAdmin)]
-        [HttpDelete("users/{id}")]
+        [HttpDelete("users/{id:guid}")]
         public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(new DeleteUserCommand(id), cancellationToken);
@@ -59,7 +59,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [Authorize(Roles = AppRole.SuperAdmin)]
-        [HttpPut("users/{id}")]
+        [HttpPut("users/{id:guid}")]
         public async Task<IActionResult> UpdateUserInfo(Guid id, [FromBody] UserUpdateDto body, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(new UpdateUserCommand(id, body), cancellationToken);
@@ -67,12 +67,21 @@ namespace Ecommerce.API.Controllers
         }
 
         [Authorize(Roles = AppRole.SuperAdmin)]
-        [HttpPut("users/{id}/password")]
+        [HttpPut("users/{id:guid}/password")]
         public async Task<IActionResult> UpdatePasswordUser(Guid id, [FromBody] UserPasswordDto body, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(new UpdatePasswordUserCommand(id, body), cancellationToken);
             return Ok(dto);
         }
+        [Authorize]
+        [HttpPut("users-update-password")]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordCommand command, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(command, cancellationToken);
+            return Ok(dto);
+        }
 
     }
+
+
 }
