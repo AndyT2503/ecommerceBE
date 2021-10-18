@@ -52,6 +52,7 @@ namespace Ecommerce.API
 
             services.AddSingleton<ICurrentUser, CurrentUser>();
             services.AddSingleton<AuthService>();
+            services.AddSingleton(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "template_configuration.xlsx"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
