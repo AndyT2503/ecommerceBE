@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Auth
 {
-    internal class UpdatePasswordUserHandler : IRequestHandler<UpdatePasswordUserCommand, Unit>
+    internal class AdminUpdatePasswordUserHandler : IRequestHandler<AdminUpdatePasswordUserCommand, Unit>
     {
         private readonly MainDbContext _mainDbContext;
-        public UpdatePasswordUserHandler(MainDbContext mainDbContext)
+        public AdminUpdatePasswordUserHandler(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
         }
 
-        public async Task<Unit> Handle(UpdatePasswordUserCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(AdminUpdatePasswordUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id == request.id, cancellationToken);
             if (user is null)
@@ -28,7 +28,7 @@ namespace Ecommerce.Application.Auth
             return Unit.Value;
         }
     }
-    public record UpdatePasswordUserCommand(Guid id, UserPasswordDto dto) : IRequest<Unit>
+    public record AdminUpdatePasswordUserCommand(Guid id, UserPasswordDto dto) : IRequest<Unit>
     {
     }
 

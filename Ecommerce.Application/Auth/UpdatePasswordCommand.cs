@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Ecommerce.Domain;
-using Ecommerce.Domain.Model;
+﻿using Ecommerce.Domain;
 using Ecommerce.Infrastructure.Exceptions;
 using Ecommerce.Infrastructure.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Auth
 {
