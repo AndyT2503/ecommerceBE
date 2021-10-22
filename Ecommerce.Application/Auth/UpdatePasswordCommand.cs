@@ -10,7 +10,6 @@ namespace Ecommerce.Application.Auth
 {
     public class UpdatePasswordCommand : IRequest<Unit>
     {
-
         public string CurrentPassword { get; init; }
         public string NewPassword { get; init; }
     }
@@ -28,25 +27,20 @@ namespace Ecommerce.Application.Auth
         {
             if (request.NewPassword.Equals("") || request.CurrentPassword.Equals(""))
             {
-                throw new CoreException("Username or password cannot be left blank ");
+                throw new CoreException("Mật khẩu mới khôngg được để trống");
             }
 
             if (request.NewPassword == request.CurrentPassword)
             {
-                throw new CoreException(" The new password cannot be the same as the old password  ");
+                throw new CoreException("Đây là mật khẩu hiện tại");
             }
-
             var userId = _currentUser.Id;
-
-            var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId)
-                                                       , cancellationToken);
+            var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId), cancellationToken);
             var verified = BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.Password);
             if (!verified)
             {
-                throw new CoreException(" Current password is incorrect ");
+                throw new CoreException("Mật khẩu hiện tại không đúng");
             }
-
-
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             _mainDbContext.Users.Update(user);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
