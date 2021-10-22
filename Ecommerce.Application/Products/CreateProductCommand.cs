@@ -31,6 +31,7 @@ namespace Ecommerce.Application.Products
             newProduct.ProductTypeId = request.ProductTypeId;
             newProduct.Configuration = request.Configuration;
             newProduct.OriginalPrice = request.OriginalPrice;
+            newProduct.AvailableStatus = request.AvailableStatus;
             foreach (var item in request.Categories)
             {
                 newProduct.Categories.Add(new Category() { Image = item.Image, Price = item.Price, Name = item.Name });

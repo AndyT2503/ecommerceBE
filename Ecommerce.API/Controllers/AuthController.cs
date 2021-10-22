@@ -70,7 +70,14 @@ namespace Ecommerce.API.Controllers
         [HttpPut("users/{id}/password")]
         public async Task<IActionResult> UpdatePasswordUser(Guid id, [FromBody] UserPasswordDto body, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(new UpdatePasswordUserCommand(id, body), cancellationToken);
+            var dto = await _mediator.Send(new AdminUpdatePasswordUserCommand(id, body), cancellationToken);
+            return Ok(dto);
+        }
+        [Authorize]
+        [HttpPut("users/password")]
+        public async Task<IActionResult> UpdatePasswor(UpdatePasswordCommand command, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(command, cancellationToken);
             return Ok(dto);
         }
 
