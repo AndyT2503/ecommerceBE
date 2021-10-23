@@ -39,6 +39,33 @@ namespace Ecommerce.Domain
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
+            AddAuditInfo();
+            UpdateSoftDeleteStatuses();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateSoftDeleteStatuses()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity.GetType().GetProperty("IsDeleted") is not null)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.CurrentValues["IsDeleted"] = false;
+                            break;
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Modified;
+                            entry.CurrentValues["IsDeleted"] = true;
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void AddAuditInfo()
+        {
             // Get all the entities that inherit from AuditableEntity
             // and have a state of Added or Modified
             var entries = ChangeTracker
@@ -68,11 +95,6 @@ namespace Ecommerce.Domain
                 // ModifiedAt and ModifiedBy
                 ((BaseModel)entityEntry.Entity).ModifiedAt = DateTime.UtcNow;
             }
-
-            // After we set all the needed properties
-            // we call the base implementation of SaveChangesAsync
-            // to actually save our entities in the database
-            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

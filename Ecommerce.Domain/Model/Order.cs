@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Ecommerce.Domain.Model
 {
-    public class Order : BaseModel
+    public class Order : BaseModel, ISoftDeleted
     {
         public Order()
         {
@@ -25,6 +25,7 @@ namespace Ecommerce.Domain.Model
         public string PaymentStatus { get; set; }
         public string Status { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     internal class OrderEntityConfiguration : IEntityTypeConfiguration<Order>
@@ -43,6 +44,7 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.CreatedAt);
             builder.Property(x => x.Status).IsRequired().HasDefaultValueSql("'Waiting'::text");
             builder.HasOne(x => x.Sale).WithMany().HasForeignKey(x => x.SaleCode).OnDelete(DeleteBehavior.ClientNoAction);
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }
