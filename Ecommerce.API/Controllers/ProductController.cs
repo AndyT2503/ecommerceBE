@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,6 +35,13 @@ namespace Ecommerce.API.Controllers
         public async Task<IActionResult> GetProductDetail(string slug, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(new GetProductDetailQuery(slug), cancellationToken);
+            return Ok(dto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(Guid id, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(new DeleteProductCommand(id), cancellationToken);
             return Ok(dto);
         }
     }

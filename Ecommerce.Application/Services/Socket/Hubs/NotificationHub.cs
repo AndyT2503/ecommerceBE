@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Ecommerce.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Services.Socket.Hubs
@@ -9,14 +13,22 @@ namespace Ecommerce.Application.Services.Socket.Hubs
     public class NotificationHub : Hub
     {
         private readonly ILogger _logger;
-        public NotificationHub(ILogger<NotificationHub> logger)
+        private readonly MainDbContext _mainDbContext;
+        public NotificationHub(ILogger<NotificationHub> logger, MainDbContext mainDbContext)
         {
             _logger = logger;
+            _mainDbContext = mainDbContext;
         }
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             _logger.LogInformation("Socket connected...");
-            return base.OnConnectedAsync();
+            var userId = new Guid(Context.ConnectionId);
+            var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user is not null)
+            {
+                var groupName = user.Role;
+                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            }
         }
     }
 }

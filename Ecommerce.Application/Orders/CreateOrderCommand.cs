@@ -37,7 +37,10 @@ namespace Ecommerce.Application.Orders
             order.Address = request.Address;
             order.Note = request.Note;
             order.CustomerName = request.CustomerName;
-            order.SaleCode = request.SaleCode;
+            if (!string.IsNullOrEmpty(request.SaleCode))
+            {
+                order.SaleCode = request.SaleCode;
+            }
             order.PaymentMethod = request.PaymentMethod;
             order.PaymentStatus = request.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Waiting : PaymentStatus.Complete;
             order.Status = request.Status;
@@ -104,6 +107,10 @@ namespace Ecommerce.Application.Orders
             CancellationToken cancellationToken)
         {
             decimal totalPrice = orderDetails.Sum(item => item.Price * item.Quantity);
+            if (String.IsNullOrEmpty(saleCode))
+            {
+                return totalPrice;
+            }
             var code = await _mainDbContext.SaleCodes.AsNoTracking().FirstOrDefaultAsync(x => x.Code == saleCode, cancellationToken);
             if (code is null)
             {

@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Domain.Model;
+using Ecommerce.Domain.Model.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Ecommerce.Domain
         public const string OrderSchema = "order";
         public const string AuthSchema = "auth";
         public const string NotifySchema = "notification";
+        public const string LocationSchema = "location";
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ChildComment> ChildComments { get; set; }
@@ -27,6 +29,10 @@ namespace Ecommerce.Domain
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<SaleCode> SaleCodes { get; set; }
+        public DbSet<Ward> Wards { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<Country> Countries { get; set; }
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
         }
@@ -38,6 +44,33 @@ namespace Ecommerce.Domain
             builder.ApplyConfigurationsFromAssembly(typeof(MainDbContext).Assembly);
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AddAuditInfo();
+            UpdateSoftDeleteStatuses();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateSoftDeleteStatuses()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity.GetType().GetProperty("IsDeleted") is not null)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.CurrentValues["IsDeleted"] = false;
+                            break;
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Modified;
+                            entry.CurrentValues["IsDeleted"] = true;
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void AddAuditInfo()
         {
             // Get all the entities that inherit from AuditableEntity
             // and have a state of Added or Modified
@@ -68,11 +101,6 @@ namespace Ecommerce.Domain
                 // ModifiedAt and ModifiedBy
                 ((BaseModel)entityEntry.Entity).ModifiedAt = DateTime.UtcNow;
             }
-
-            // After we set all the needed properties
-            // we call the base implementation of SaveChangesAsync
-            // to actually save our entities in the database
-            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }
