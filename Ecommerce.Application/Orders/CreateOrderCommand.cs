@@ -84,9 +84,9 @@ namespace Ecommerce.Application.Orders
                     price =  orderdetail.price,
                     salecodes= order.salecode,
 
-                }
+                  }
             };
-            await -_mailnotifyservice.sendmailasync("bjnguyen97@gmail.com", data, "create_order");
+            await _mailnotifyservice.sendmailasync("bjnguyen97@gmail.com", data, "create_order");
 
             _mainDbContext.Orders.Add(order);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
