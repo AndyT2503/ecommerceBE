@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Domain.Model
+﻿namespace Ecommerce.Domain.Model.Common
 {
     public interface ISoftDeleted
     {

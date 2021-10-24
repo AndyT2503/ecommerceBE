@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
+using Ecommerce.Domain.Model.Common;
 
 namespace Ecommerce.Domain.Model
 {
