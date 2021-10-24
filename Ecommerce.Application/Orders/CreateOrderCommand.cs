@@ -26,8 +26,7 @@ namespace Ecommerce.Application.Orders
         }
 
         public async Task<Unit> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
-        {
-
+        { 
             var order = new Order();
             order.OrderCode = NanoIdHelper.GenerateNanoId();
             order.Email = request.Email;
@@ -44,64 +43,22 @@ namespace Ecommerce.Application.Orders
             order.PaymentMethod = request.PaymentMethod;
             order.PaymentStatus = request.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Waiting : PaymentStatus.Complete;
             order.Status = request.Status;
-           foreach (var item in request.orderdetails)
+            foreach (var item in request.OrderDetails)
             {
-               var category = await _maindbcontext.categories.asnotracking()
-                    .firstordefaultasync(x => x.id == item.categoryid && x.isactive, cancellationtoken: cancellationtoken);
+               var category = await _mainDbContext.Categories.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == item.CategoryId && x.IsActive, cancellationToken);
                if (category is null)
-                {
-                   throw new coreexception("mặt hàng không tồn tại");
+               {
+                   throw new CoreException("mặt hàng không tồn tại");
                }
-              order.orderdetails.add(new orderdetail() { categoryid = item.categoryid, price = category.price, quantity = item.quantity });
-          }
-
-         order.price = await gettotalprice(order.orderdetails, order.salecode, cancellationtoken);
-
-
-            var orderdetail = new orderdetails();
-            orderdetail.categoryid = request.categoryid;
-            orderdetail.quantity = request.quantity;
-            orderdetail.price = request.price;
-
-            datetime today = datetime.now.tostring("dddd , mmm dd yyyy,hh:mm:ss");
-            datetime ship = today.adddays(3).tostring("dddd , mmm dd yyyy");
-
-            var data = new
-            {
-                name = order.customername,
-                code = order.ordercode,
-                time = today,
-                email = order.email,
-                phone = order.phonenumber,
-                address = order.address,
-                payment = order.paymentmethod,
-                delivery = ship,
-                url = " ",
-                orderdetail = new[]
-                    {
-                    categoryid = orderdetail.categoryid,
-                    quantity = orderdetail.quantity,
-                    price =  orderdetail.price,
-                    salecodes= order.salecode,
-
-                  }
-            };
-            await _mailnotifyservice.sendmailasync("bjnguyen97@gmail.com", data, "create_order");
-
-            _mainDbContext.Orders.Add(order);
+              order.OrderDetails.Add(new OrderDetail() { CategoryId = item.CategoryId, Price = category.Price, Quantity = item.Quantity });
+            }
+            order.Price = await GetTotalPrice(order.OrderDetails, order.SaleCode, cancellationToken);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
+            await SentMail(order);
             return Unit.Value;
 
         }
-
-        
-
-
-
-
-
-
-
 
         private async Task<decimal> GetTotalPrice(ICollection<OrderDetail> orderDetails, string saleCode,
             CancellationToken cancellationToken)
@@ -130,19 +87,50 @@ namespace Ecommerce.Application.Orders
 
             return totalPrice - code.Percent * totalPrice / 100;
         }
+
+        private async Task SentMail(Order order)
+        {
+            var orderDetailList = new List<object>();
+            foreach (var item in order.OrderDetails)
+            {
+                var orderDetail = new
+                {
+                    categoryName = item.Category.Name,
+                    quantity = item.Quantity,
+                    price = item.Price
+                };
+                orderDetailList.Add(orderDetail);
+            }
+
+            var data = new
+            {
+                name = order.CustomerName,
+                code = order.OrderCode,
+                time = order.CreatedAt.ToString("dd/MM/yyyy HH:mm"),
+                email = order.Email,
+                phone = order.PhoneNumber,
+                address = order.Address,
+                payment = order.PaymentMethod,
+                delivery = order.CreatedAt.AddDays(1).ToString("dd/MM/yyyy HH:mm"),
+                url = " ", //TODO: Update url 
+                saleCode = order.SaleCode,
+                orderdetail = orderDetailList
+            };
+            await _mailNotifyService.SendMailAsync("bjnguyen97@gmail.com", data, "create_order");
+        }
     }
     public class CreateOrderCommand : IRequest<Unit>
     {
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string ProvinceCode { get; set; }
-        public string DistrictCode { get; set; }
-        public string Address { get; set; }
-        public string Note { get; set; }
-        public string CustomerName { get; set; }
-        public string SaleCode { get; set; }
-        public string PaymentMethod { get; set; }
-        public string Status { get; set; }
-        public virtual ICollection<CreateOrderDetailDto> OrderDetails { get; set; }
+        public string Email { get; init; }
+        public string PhoneNumber { get; init; }
+        public string ProvinceCode { get; init; }
+        public string DistrictCode { get; init; }
+        public string Address { get; init; }
+        public string Note { get; init; }
+        public string CustomerName { get; init; }
+        public string SaleCode { get; init; }
+        public string PaymentMethod { get; init; }
+        public string Status { get; init; }
+        public virtual ICollection<CreateOrderDetailDto> OrderDetails { get; init; }
     }
 }
