@@ -2,10 +2,235 @@
 <mailTemplates>
   <subject subject="Create_Order">Thông báo đơn hàng mới</subject>
   <div id="Create_Order">
-    <p>Test Email {{ Name.user }} </p>
-    {% for order in Orders  %}
-    <p style="color: red">Id: {{ order.id }} </p>
-    <p style="color: red">Name: {{ order.name }} </p>
-    {% endfor %}
+    <div class="container" style="  height: 1500px; width: 1000px; border: none; background-color:lightgray; margin:0px 100px;
+ box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #444;">
+      <table class="table"
+          style=" height: 1200px; width: 600px; background-color: white; margin: 100px auto; border-collapse: collapse;  box-sizing: border-box;">
+        <thead>
+          <tr class="thead" style=" height: 70px; border-bottom:3px solid #02acea">
+            <th>
+              <a href="#">
+                <img
+           src="https://icon-library.com/images/google-play-store-icon-png/google-play-store-icon-png-14.jpg"
+           alt="" class="img1"
+           style="margin: 0 20px 0 200px;  height: 37px; width: 120px; object-fit: cover; height: 37px; width: 120px; object-fit: cover;"/>
+              </a>
+            </th>
+            <th>
+              <a href="#">
+                <img src="https://g-v.asia/wp-content/uploads/2020/09/download-on-the-app-store.png"
+            alt="" class="img1"
+            style="margin: 0 200px 0 20px;  height: 37px; width: 120px; object-fit: cover;"/>
+              </a>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="body">
+          <tr class="i border-top:1px solid #ddd">
+            <td>
+              <a href="#">
+                <img src="https://khomagiamgia.com/wp-content/uploads/2021/05/banner.png" alt=""
+            class="img2"
+            style="margin: 10px 20px;  height: 60px; width: 300px;  object-fit: cover; "/>
+              </a>
+            </td>
+            <td>
+              <a href="#">
+                <img src="https://cdn.chanhtuoi.com/uploads/2020/08/tiki-global-1-1.jpg" alt=""
+            class="img2"
+            style="margin: 10px 20px; height: 60px; width: 300px;  object-fit: cover;  "/>
+              </a>
+            </td>
+          </tr>
+
+          <tr class="h1">
+            <td colspan="2" style=" margin: 0px;; padding:0 20px">
+              <h1 style="font-size: 17px; font-weight: bold; ">
+                Cảm ơn quý khách {{name}} đã đặt hàng tại
+                tiki,
+              </h1>
+              <p style="margin: 4px 0;line-height: 18px;">
+                Tiki rất vui thông báo đơn hàng #{{code}} của quý
+                khách đã được tiếp nhận và đang trong quá trình xử lý. Tiki sẽ thông báo đến quý khách ngay
+                khi hàng chuẩn bị được giao.
+              </p>
+                <h3
+                    style="font-size:13px;font-weight:bold; color:#02acea;text-transform:uppercase;margin:20px 0 0 0;border-bottom:2px solid #ddd">
+                  Thông tin đơn hàng #{{code}} <span style="font-size:12px;color:#777;text-transform:none;font-weight:normal">
+                    (Ngày {{time}})
+                  </span>
+                </h3>
+              </td>
+          </tr>
+          <tr>
+            <td>
+              <h4 style="font-weight: bold; margin:0 0 0 20px; padding: 10px 0 10px;">
+                Thông tin thanh toán
+              </h4>
+            </td>
+            <td>
+              <h4 style="font-weight: bold; margin:0 0 0 10px; padding: 10px 0 10px;">Địa chỉ giao hàng</h4>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <p style=" margin:0 0 0 20px; padding: 0;">{{name}}</p>
+              <p style="color: blue; margin:0 0 0 20px; padding: 0;">
+                <u>{{email}}</u>
+              </p>
+              <p style=" margin:0 0 0 20px; padding: 0;">T:{{phone}}</p>
+            </td>
+            <td>
+              <p style=" margin:0 0 0 10px; padding: 0;">{{name}}</p>
+              <p style="color:blue; margin:0 0 0 10px; padding: 0;">
+                <u>{{email}}</u>
+              </p>
+              <p style=" margin:0 0 0 10px; padding: 0;">
+                {{address}}
+              </p>
+              <p style=" margin:0 0 0 10px; padding: 0;">T:{{phone}}</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style=" padding: 20px;">
+              <p style="font-weight: bold;">
+                Phương thức thanh toán:<span style="font-weight: normal;">
+                  {{payment}}
+                </span>
+              </p>
+              <p style="font-weight: bold;">
+                Thời gian giao hàng dự kiến:<span style="font-weight: normal;">
+                  Dự kiến giao hàng trước {{delivery}}
+                </span>
+              </p>
+              <p style="font-weight: bold;">
+                Phí vận chuyển:<span style="font-weight: normal;"> 39.000đ</span>
+              </p>
+              <p style="font-weight: bold;">
+                Sử dụng bọc sách cao cấp Bookcare:<span
+                                style="font-weight: normal;"> Không</span>
+              </p>
+              <p style="padding: 15px;">
+                <i>
+                  Lưu ý: Đối với đơn hàng đã được thanh toán trước, nhân viên giao
+                  nhận có thể yêu cầu người nhận hàng cung cấp CMND / giấy phép lái xe để chụp ảnh hoặc
+                  ghi lại thông tin.
+                </i>
+              </p>
+              <h3
+                  style="font-size:13px;font-weight:bold;color:#02acea;text-transform:uppercase;margin:20px 0 0 0;border-bottom:1px solid #ddd">
+                CHI TIẾT ĐƠN HÀNG
+              </h3>
+
+            </td>
+          </tr>
+          <tr>
+          <td colspan="2">
+            <table style=" border-collapse: collapse; margin:0px 25px 0 35px; padding: 0; line-height: 22px;">
+              <thead style="background-color:#02acea ;color: white; text-align: center;">
+                <tr>
+                  <th>Sản phẩm</th>
+                  <th>Đơn giá</th>
+                  <th>Số lượng</th>
+                  <th>Giảm giá</th>
+                  <th>Tổng tạm</th>
+                </tr>
+              </thead>
+              {% for orderdetail in OrderDetail  %}
+              <tbody>
+                <tr style="background-color: darkgray; text-align: center;">
+                  <td>{{categoryId}}</td>
+                  <td>{{price}}đ</td>
+                  <td>{{quantity}}</td>
+                  {% if saleCodes != null %}
+                  <td>{{saleCodes}}đ</td>
+                  {% else %}
+                  <td>0đ</td>
+                  {% endif %}
+                
+                  <td>{{price}}</td>
+                </tr>
+              </tbody>
+              {% endfor %}
+              <tfoot style=" background-color:#eee;">
+                <tr>
+
+                  <td colspan="4" style="padding-right: 10px; text-align: right;">Tạm tính</td>
+                  <td>249.000đ</td>
+                </tr>
+                <tr>
+                  <td colspan="4" style="padding-right: 10px; text-align: right;">Phí vận chuyển</td>
+                  <td>39.000đ</td>
+                </tr>
+                <tr style="background-color:darkgray;font-weight: bold">
+                  <td colspan="4" style="padding-right: 10px; text-align: right;">
+                    Tổng giá trị đơn hàng
+                  </td>
+                  <td>288.000đ</td>
+                </tr>
+                <tr>
+                  <td colspan="5" style="background-color: white;">
+                    <button
+                        style="height: 30px; width: 180px; background-color:#02acea; border: none; border-radius: 2px; color: white; margin: 5px 180px 5px 180px;">
+                      <a href="{{url}}">
+                        Chi tiết đơn hàng tại Tiki
+                      </a>
+                     
+                    </button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+
+              <p style="margin-left: 20px;">
+                Trường hợp quý khách có những băn khoăn về đơn hàng, có thể xem
+                thêm mục<a href="#" style="font-weight: bold; color:blue;"> các câu hỏi thường gặp.</a>
+              </p>
+              <p style="border: 1px dashed #02acea  ; padding: 5px; margin: 20px;">
+                Từ ngày 14/2/2015, Tiki sẽ
+                không gởi tin nhắn SMS khi đơn hàng của bạn được xác nhận thành công. Chúng tôi chỉ liên hệ
+                trong trường hợp đơn hàng có thể bị trễ hoặc không liên hệ giao hàng được.
+              </p>
+              <p style="margin-left: 20px; margin-right: 20px;">
+                Mọi thắc mắc và góp ý, quý khách vui lòng liên
+                hệ với Tiki Care qua <a href="#" style="color: blue; ">https://hotro.tiki.vn/hc/vi.</a> Đội
+                ngũ Tiki Care luôn sẵn sàng hỗ trợ bạn.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p style="font-weight: bold; margin: 20px; padding: 0;">Một lần nữa Tiki cảm ơn quý khách!</p>
+              <a href="#"
+                  style="padding:40px 0px 20px 550px; color: blue;font-size: 16px;   font-family:Comic Sans MS, cursive, sans-serif;text-decoration: none ;font-weight: bold;">Tiki</a>
+            </td>
+          </tr>
+
+        </tbody>
+        <tfoot>
+          <tr
+              style="background-color: lightgray; color: #4b8da5; font-family: Arial, Helvetica, sans-serif; font-size: 12px; ">
+            <td colspan="2">
+              <p>Quý khách nhận được email này vì đã mua hàng tại Tiki.</p>
+              <p>
+                Để chắc chắn luôn nhận được email thông báo, xác nhận mua hàng từ Tiki, quý khách vui lòng
+                thêm địa chỉ<a href="#" style="color: blue;"> hotro@tiki.vn</a> vào số địa chỉ (Address
+                Book, Contacts) của hộp email.
+              </p>
+              <p> Văn phòng Tiki: 52 Út Tịch, phường 4, quận Tân Bình, thành phố Hồ Chí Minh, Việt Nam</p>
+              <p> Bạn không muốn nhận email từ Tiki? Hủy đăng ký tại đây.</p>
+            </td>
+
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
   </div>
 </mailTemplates>
