@@ -3,15 +3,17 @@ using System;
 using Ecommerce.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Ecommerce.Domain.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211023112535_add_soft_deleted")]
+    partial class add_soft_deleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,43 +142,6 @@ namespace Ecommerce.Domain.Migrations
                     b.HasIndex("Username");
 
                     b.ToTable("Comment", "product");
-                });
-
-            modelBuilder.Entity("Ecommerce.Domain.Model.Country", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Country", "location");
-                });
-
-            modelBuilder.Entity("Ecommerce.Domain.Model.District", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProvinceCode")
-                        .HasColumnType("text");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("ProvinceCode");
-
-                    b.ToTable("District", "location");
                 });
 
             modelBuilder.Entity("Ecommerce.Domain.Model.Notification", b =>
@@ -431,27 +396,6 @@ namespace Ecommerce.Domain.Migrations
                     b.ToTable("ProductType", "product");
                 });
 
-            modelBuilder.Entity("Ecommerce.Domain.Model.Province", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("CountryCode");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Province", "location");
-                });
-
             modelBuilder.Entity("Ecommerce.Domain.Model.Rating", b =>
                 {
                     b.Property<Guid>("Id")
@@ -613,27 +557,6 @@ namespace Ecommerce.Domain.Migrations
                     b.ToTable("User", "auth");
                 });
 
-            modelBuilder.Entity("Ecommerce.Domain.Model.Ward", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DistrictCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("DistrictCode");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Ward", "location");
-                });
-
             modelBuilder.Entity("Ecommerce.Domain.Model.Category", b =>
                 {
                     b.HasOne("Ecommerce.Domain.Model.Product", "Product")
@@ -667,33 +590,12 @@ namespace Ecommerce.Domain.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Ecommerce.Domain.Model.District", b =>
-                {
-                    b.HasOne("Ecommerce.Domain.Model.Province", "Province")
-                        .WithMany()
-                        .HasForeignKey("ProvinceCode");
-
-                    b.Navigation("Province");
-                });
-
             modelBuilder.Entity("Ecommerce.Domain.Model.Order", b =>
                 {
-                    b.HasOne("Ecommerce.Domain.Model.District", "District")
-                        .WithMany()
-                        .HasForeignKey("DistrictCode");
-
-                    b.HasOne("Ecommerce.Domain.Model.Province", "Province")
-                        .WithMany()
-                        .HasForeignKey("ProvinceCode");
-
                     b.HasOne("Ecommerce.Domain.Model.SaleCode", "Sale")
                         .WithMany()
                         .HasForeignKey("SaleCode")
                         .OnDelete(DeleteBehavior.ClientNoAction);
-
-                    b.Navigation("District");
-
-                    b.Navigation("Province");
 
                     b.Navigation("Sale");
                 });
@@ -736,15 +638,6 @@ namespace Ecommerce.Domain.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Ecommerce.Domain.Model.Province", b =>
-                {
-                    b.HasOne("Ecommerce.Domain.Model.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryCode");
-
-                    b.Navigation("Country");
-                });
-
             modelBuilder.Entity("Ecommerce.Domain.Model.Rating", b =>
                 {
                     b.HasOne("Ecommerce.Domain.Model.Product", "Product")
@@ -773,15 +666,6 @@ namespace Ecommerce.Domain.Migrations
                     b.Navigation("ProductType");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Ecommerce.Domain.Model.Ward", b =>
-                {
-                    b.HasOne("Ecommerce.Domain.Model.District", "District")
-                        .WithMany()
-                        .HasForeignKey("DistrictCode");
-
-                    b.Navigation("District");
                 });
 
             modelBuilder.Entity("Ecommerce.Domain.Model.Comment", b =>

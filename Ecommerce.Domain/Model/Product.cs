@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using Ecommerce.Domain.Model.Common;
 
 namespace Ecommerce.Domain.Model
 {
-    public class Product : BaseModel
+    public class Product : BaseModel, ISoftDeleted
     {
         public Product()
         {
@@ -26,6 +27,7 @@ namespace Ecommerce.Domain.Model
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     internal class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
@@ -48,6 +50,7 @@ namespace Ecommerce.Domain.Model
             builder.Property(x => x.SpecialFeatures).HasConversion(
                                 v => string.Join(',', v),
                                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

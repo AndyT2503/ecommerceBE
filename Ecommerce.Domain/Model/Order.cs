@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
+using Ecommerce.Domain.Model.Common;
 
 namespace Ecommerce.Domain.Model
 {
-    public class Order : BaseModel
+    public class Order : BaseModel, ISoftDeleted
     {
         public Order()
         {
@@ -14,7 +15,9 @@ namespace Ecommerce.Domain.Model
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string ProvinceCode { get; set; }
+        public virtual Province Province { get; set; }
         public string DistrictCode { get; set; }
+        public virtual District District { get; set; }
         public string Address { get; set; }
         public string Note { get; set; }
         public string CustomerName { get; set; }
@@ -25,6 +28,7 @@ namespace Ecommerce.Domain.Model
         public string PaymentStatus { get; set; }
         public string Status { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     internal class OrderEntityConfiguration : IEntityTypeConfiguration<Order>
@@ -43,6 +47,11 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.CreatedAt);
             builder.Property(x => x.Status).IsRequired().HasDefaultValueSql("'Waiting'::text");
             builder.HasOne(x => x.Sale).WithMany().HasForeignKey(x => x.SaleCode).OnDelete(DeleteBehavior.ClientNoAction);
+            builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasOne(x => x.Province).WithMany()
+                .HasForeignKey(x => x.ProvinceCode);
+            builder.HasOne(x => x.District).WithMany()
+                .HasForeignKey(x => x.DistrictCode);
         }
     }
 }
