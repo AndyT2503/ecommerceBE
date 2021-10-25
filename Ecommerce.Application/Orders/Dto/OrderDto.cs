@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ecommerce.Application.Orders.Dto
 {
-    public class OrderTrackingDto
+    public class OrderDto
     {
         public string OrderCode { get; init; }
         public string Status { get; init; }

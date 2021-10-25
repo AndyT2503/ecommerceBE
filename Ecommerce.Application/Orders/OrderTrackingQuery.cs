@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.Orders.Dto;
 using Ecommerce.Domain;
 using Ecommerce.Domain.Model;
+using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Orders
 {
-    public class GetOrderTrackingQuery : IRequest<OrderTrackingDto>
+    public class GetOrderTrackingQuery : IRequest<OrderDto>
     {
         public string PhoneNumber { get; init; }
         public string OrderCode { get; init; }
     }
 
-    internal class GetOrderTrackingHandler : IRequestHandler<GetOrderTrackingQuery, OrderTrackingDto>
+    internal class GetOrderTrackingHandler : IRequestHandler<GetOrderTrackingQuery, OrderDto>
     {
         private readonly MainDbContext _mainDbContext;
         public GetOrderTrackingHandler(MainDbContext mainDbContext)
@@ -26,17 +27,23 @@ namespace Ecommerce.Application.Orders
             _mainDbContext = mainDbContext;
         }
 
-        public async Task<OrderTrackingDto> Handle(GetOrderTrackingQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(GetOrderTrackingQuery request, CancellationToken cancellationToken)
         {
-            var order = await _mainDbContext.Orders
+            var order = await _mainDbContext.Orders.AsNoTracking()
                 .Where(x => x.PhoneNumber == request.PhoneNumber && x.OrderCode == request.OrderCode)
                 .Include(x => x.OrderDetails)
                 .Include(x => x.Sale)
-                .FirstOrDefaultAsync();
-            var price = GetTotalPrice(order.OrderDetails);
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (order == null)
+            {
+                throw new CoreException("Order tracking không tồn tại.");
+            }
+
             var estimatedDelivery = order.CreatedAt.Date.AddDays(1);
             var priceSale = GetSalePrice(order.Sale, GetTotalPrice(order.OrderDetails));
-            var orderTracking = new OrderTrackingDto
+
+            var orderTracking = new OrderDto
             {
                 OrderCode = order.OrderCode,
                 Status = order.Status,
@@ -48,16 +55,15 @@ namespace Ecommerce.Application.Orders
                 PaymentMethod = order.PaymentMethod,
                 PaymentStatus = order.PaymentStatus,
                 EstimatedDeliveryAt = estimatedDelivery,
-                CreatedAt = order.CreatedAt,
-                SaleCode = order.Sale.Code,
+                SaleCode = order.SaleCode,
                 PriceSale = priceSale,
                 TotalPrice = order.Price,
                 OrderDetails = order.OrderDetails.Select(x => new OrderDetailDto { Id = x.Id, Price = x.Price, Quantity = x.Quantity })   
             };
             return orderTracking;
         }
-
-        public static decimal GetSalePrice(SaleCode saleCode, decimal totalPrice)
+        
+        private static decimal GetSalePrice(SaleCode saleCode, decimal totalPrice)
         {
             if (saleCode.Percent * totalPrice / 100 > saleCode.MaxPrice)
             {
@@ -67,7 +73,7 @@ namespace Ecommerce.Application.Orders
             return saleCode.Percent * totalPrice / 100;
         }
 
-        public static decimal GetTotalPrice(ICollection<OrderDetail> orderDetails)
+        private static decimal GetTotalPrice(ICollection<OrderDetail> orderDetails)
         {
             return orderDetails.Sum(x => x.Price * x.Quantity);
         }
