@@ -5,6 +5,7 @@ namespace Ecommerce.Application.Orders.Dto
 {
     public class OrderDto
     {
+        public Guid Id { get; init; }
         public string OrderCode { get; init; }
         public string Status { get; init; }
         public string Address { get; init; }

@@ -37,7 +37,7 @@ namespace Ecommerce.Application.Orders
 
             if (order == null)
             {
-                throw new CoreException("Order tracking không tồn tại.");
+                throw new CoreException("Order không tồn tại.");
             }
 
             var estimatedDelivery = order.CreatedAt.Date.AddDays(1);
@@ -45,6 +45,7 @@ namespace Ecommerce.Application.Orders
 
             var orderTracking = new OrderDto
             {
+                Id = order.Id,
                 OrderCode = order.OrderCode,
                 Status = order.Status,
                 Address = order.Address,
