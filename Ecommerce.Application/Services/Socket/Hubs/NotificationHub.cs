@@ -22,7 +22,7 @@ namespace Ecommerce.Application.Services.Socket.Hubs
         public override async Task OnConnectedAsync()
         {
             _logger.LogInformation("Socket connected...");
-            var userId = new Guid(Context.ConnectionId);
+            var userId = new Guid(Context.UserIdentifier);
             var user = await _mainDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user is not null)
             {

@@ -18,6 +18,7 @@ namespace Ecommerce.Domain.Helper
             productName = productName.Trim();
             productName = ConvertToUnSign(productName);
             var slug = productName.Replace(" ", "-");
+            slug = slug.Replace("/", "");
             return slug;
         }
     }

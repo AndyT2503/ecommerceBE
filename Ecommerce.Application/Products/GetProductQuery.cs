@@ -4,6 +4,7 @@ using Ecommerce.Infrastructure.Common;
 using Ecommerce.Infrastructure.LinQ;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -25,7 +26,9 @@ namespace Ecommerce.Application.Products
                 .Include(x => x.ProductType)
                 .Include(x => x.Supplier)
                 .Include(x => x.Categories)
-                .Where(i => EF.Functions.ILike(i.Name, $"%{request.Name}%")).Select(x => new ProductDto
+                .WhereIf(request.ProductTypeId != null, i => i.ProductTypeId == request.ProductTypeId)
+                .WhereIf(request.SupplierId != null, i => i.SupplierId == request.SupplierId)
+                .WhereIf(!String.IsNullOrEmpty(request.Name),i => EF.Functions.ILike(i.Name, $"%{request.Name}%")).Select(x => new ProductDto
                 {
                     Id = x.Id,
                     Slug = x.Slug,
@@ -58,5 +61,7 @@ namespace Ecommerce.Application.Products
         public int? PageSize { get; init; }
         public int? PageIndex { get; init; }
         public string Name { get; init; }
+        public Guid? ProductTypeId { get; init; }
+        public Guid? SupplierId { get; init; }
     }
 }
