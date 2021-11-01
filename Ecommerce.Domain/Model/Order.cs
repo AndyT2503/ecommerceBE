@@ -29,6 +29,7 @@ namespace Ecommerce.Domain.Model
         public string Status { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public bool IsDeleted { get; set; }
+        public virtual ICollection<OrderLog> OrderLogs { get; set; }
     }
 
     internal class OrderEntityConfiguration : IEntityTypeConfiguration<Order>
