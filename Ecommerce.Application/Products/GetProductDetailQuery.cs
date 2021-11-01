@@ -45,7 +45,8 @@ namespace Ecommerce.Application.Products
                         Id = i.Id,
                         Image = i.Image,
                         Name = i.Name,
-                        Price = i.Price
+                        Price = i.Price,
+                        IsActive = i.IsActive
                     })
                 }).FirstOrDefaultAsync(x => x.Slug == request.slug, cancellationToken);
             if (product is null)

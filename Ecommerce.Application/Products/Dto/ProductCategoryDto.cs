@@ -8,5 +8,6 @@ namespace Ecommerce.Application.Products.Dto
         public string Name { get; init; }
         public string Image { get; init; }
         public decimal Price { get; init; }
+        public bool IsActive { get; init; }
     }
 }
