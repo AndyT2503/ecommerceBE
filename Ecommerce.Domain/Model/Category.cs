@@ -5,7 +5,7 @@ using System;
 
 namespace Ecommerce.Domain.Model
 {
-    public class Category : BaseModel
+    public class Category : BaseModel, ISoftDeleted
     {
         public string Name { get; set; }
         public string Image { get; set; }
@@ -13,6 +13,7 @@ namespace Ecommerce.Domain.Model
         public bool IsActive { get; set; }
         public Guid ProductId { get; set; }
         public virtual Product Product { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     internal class CategoryEntityConfiguration : IEntityTypeConfiguration<Category>
@@ -26,6 +27,7 @@ namespace Ecommerce.Domain.Model
             builder.HasIndex(x => x.ProductId);
             builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
             builder.HasOne(d => d.Product).WithMany(d => d.Categories).HasForeignKey(d => d.ProductId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }
