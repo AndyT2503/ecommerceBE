@@ -68,13 +68,12 @@ namespace Ecommerce.Application.Services.AuthService
         public async Task<Guid> ValidateRefreshToken(string refreshToken)
         {
             var redisUser = await _cache.GetAsync(refreshToken);
-            var userCache = new UserCacheDto(); 
             if (redisUser is null)
             {
                 throw new CoreException("Invalid Refresh Token");
             }
             var serializedUser = Encoding.UTF8.GetString(redisUser);
-            userCache = JsonConvert.DeserializeObject<UserCacheDto>(serializedUser);
+            var userCache = JsonConvert.DeserializeObject<UserCacheDto>(serializedUser);
             return userCache.UserId;
         }
     }
