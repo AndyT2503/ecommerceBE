@@ -73,7 +73,7 @@ namespace Ecommerce.API
                 });
             });
             services.ConfigureSocketService();
-
+            services.ConfigureRedis(Configuration);
             services.AddSingleton<ICurrentUser, CurrentUser>();
             services.AddSingleton<AuthService>();
         }
@@ -155,6 +155,15 @@ namespace Ecommerce.API
         {
             services.AddSignalR();
             services.AddScoped<SocketService>();
+        }
+
+        public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration["Redis:Url"];
+                options.InstanceName = configuration["Redis:Prefix"];
+            });
         }
 
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)

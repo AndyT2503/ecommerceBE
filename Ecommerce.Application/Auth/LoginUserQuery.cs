@@ -13,12 +13,10 @@ namespace Ecommerce.Application.Auth
     internal class LoginUserHandler : IRequestHandler<LoginUserQuery, UserLoginDto>
     {
         private readonly MainDbContext _mainDbContext;
-        private readonly IConfiguration _configuration;
         private readonly AuthService _authService;
-        public LoginUserHandler(MainDbContext mainDbContext, IConfiguration configuration, AuthService authService)
+        public LoginUserHandler(MainDbContext mainDbContext, AuthService authService)
         {
             _mainDbContext = mainDbContext;
-            _configuration = configuration;
             _authService = authService;
         }
 
@@ -37,6 +35,7 @@ namespace Ecommerce.Application.Auth
                 throw new CoreException("Password is incorrect");
             }
             var tokenString = _authService.GenerateToken(user);
+            var refreshToken = await _authService.GenerateRefreshToken(user.Id);
             return new UserLoginDto()
             {
                 Id = user.Id,
@@ -44,7 +43,8 @@ namespace Ecommerce.Application.Auth
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 AccessToken = tokenString,
-                Role = user.Role
+                Role = user.Role,
+                RefreshToken = refreshToken
             };
         }
     }

@@ -34,6 +34,13 @@ namespace Ecommerce.API.Controllers
             return Ok(dto);
         }
 
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> UserRefreshToken(UserRefreshTokenQuery query, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(query, cancellationToken);
+            return Ok(dto);
+        }
+
         [Authorize]
         [HttpGet("user-profile")]
         public async Task<IActionResult> GetUserProfile([FromQuery] UserProfileQuery query, CancellationToken cancellationToken)
