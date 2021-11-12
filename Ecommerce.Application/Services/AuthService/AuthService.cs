@@ -15,7 +15,7 @@ namespace Ecommerce.Application.Services.AuthService
 {
     public class AuthService
     {
-        private const int Access_Token_LifeTime = 5;
+        private const int Access_Token_LifeTime = 1;
         private const int Refresh_Token_LifeTime = 2;
         private readonly IConfiguration _configuration;
         private readonly IDistributedCache _cache;
