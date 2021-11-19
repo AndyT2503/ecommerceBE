@@ -74,6 +74,7 @@ namespace Ecommerce.API
             });
             services.ConfigureSocketService();
             services.ConfigureRedis(Configuration);
+            services.ConfigureNotificationService();
             services.AddSingleton<ICurrentUser, CurrentUser>();
             services.AddSingleton<AuthService>();
         }
@@ -136,7 +137,7 @@ namespace Ecommerce.API
 
         public static void ConfigureNotificationService(this IServiceCollection services)
         {
-            services.AddSingleton<NotificationService>();
+            services.AddScoped<NotificationService>();
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)

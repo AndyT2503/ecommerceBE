@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ecommerce.Application.Services.NotificationService;
 
 namespace Ecommerce.Application.Orders
 {
@@ -19,10 +20,12 @@ namespace Ecommerce.Application.Orders
     {
         private readonly MainDbContext _mainDbContext;
         private readonly IMailNotifyService _mailNotifyService;
-        public CreateOrderHandler(MainDbContext mainDbContext, IMailNotifyService mailNotifyService)
+        private readonly NotificationService _notificationService;
+        public CreateOrderHandler(MainDbContext mainDbContext, IMailNotifyService mailNotifyService, NotificationService notificationService)
         {
             _mainDbContext = mainDbContext;
             _mailNotifyService = mailNotifyService;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -59,6 +62,7 @@ namespace Ecommerce.Application.Orders
             order.OrderLogs.Add(new OrderLog(){Status = OrderStatus.Waiting, Timestamp = DateTime.UtcNow});
             _mainDbContext.Orders.Add(order);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
+            await CreateNotification(order, cancellationToken);
             return Unit.Value;
         }
 
@@ -88,6 +92,19 @@ namespace Ecommerce.Application.Orders
             }
 
             return totalPrice - code.Percent * totalPrice / 100;
+        }
+
+        private async Task CreateNotification(Order order, CancellationToken cancellationToken)
+        {
+            var metadata = new
+            {
+                orderId = order.Id,
+                orderCode = order.OrderCode,
+                customerName = order.CustomerName,
+                createAt = order.CreatedAt,
+                eventName = NotifyEvent.CreateOrder
+            };
+            await _notificationService.SentNotificationByGroupAsync(AppRole.Admin, metadata, NotifyEvent.CreateOrder, cancellationToken);
         }
     }
     public class CreateOrderCommand : IRequest<Unit>

@@ -27,7 +27,7 @@ namespace Ecommerce.Application.Services.NotificationService
                 MetaData = message,
             };
             _mainDbContext.Notifications.Add(newNotification);
-            await _mainDbContext.SaveChangesAsync();
+            await _mainDbContext.SaveChangesAsync(cancellationToken);
             await _socketService.SendMessageByUserAsync(SocketEvent.NewNotification, userId.ToString(), message, cancellationToken);
         }
 
@@ -40,7 +40,7 @@ namespace Ecommerce.Application.Services.NotificationService
                 MetaData = message,
             };
             _mainDbContext.Notifications.Add(newNotification);
-            await _mainDbContext.SaveChangesAsync();
+            await _mainDbContext.SaveChangesAsync(cancellationToken);
             await _socketService.SendMessageByGroupAsync(SocketEvent.NewNotification, userRole, message, cancellationToken);
         }
 
@@ -52,7 +52,7 @@ namespace Ecommerce.Application.Services.NotificationService
                 MetaData = message,
             };
             _mainDbContext.Notifications.Add(newNotification);
-            await _mainDbContext.SaveChangesAsync();
+            await _mainDbContext.SaveChangesAsync(cancellationToken);
             await _socketService.SendMessageAsync(SocketEvent.NewNotification, message, cancellationToken);
         }
 
