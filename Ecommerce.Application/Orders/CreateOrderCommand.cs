@@ -43,7 +43,6 @@ namespace Ecommerce.Application.Orders
             }
             order.PaymentMethod = request.PaymentMethod;
             order.PaymentStatus = request.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Waiting : PaymentStatus.Complete;
-            order.Status = request.Status;
             foreach (var item in request.OrderDetails)
             {
                 var category = await _mainDbContext.Categories.AsNoTracking()
@@ -57,7 +56,7 @@ namespace Ecommerce.Application.Orders
 
             order.Price = await GetTotalPrice(order.OrderDetails, order.SaleCode, cancellationToken);
 
-
+            order.OrderLogs.Add(new OrderLog(){Status = OrderStatus.Waiting, Timestamp = DateTime.UtcNow});
             _mainDbContext.Orders.Add(order);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
@@ -102,7 +101,6 @@ namespace Ecommerce.Application.Orders
         public string CustomerName { get; init; }
         public string SaleCode { get; init; }
         public string PaymentMethod { get; init; }
-        public string Status { get; init; }
         public virtual ICollection<CreateOrderDetailDto> OrderDetails { get; init; }
     }
 }

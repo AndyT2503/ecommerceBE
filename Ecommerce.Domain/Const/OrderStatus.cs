@@ -1,8 +1,10 @@
 ﻿namespace Ecommerce.Domain.Const
 {
-    public static class PaymentStatus
+    public static class OrderStatus
     {
         public const string Waiting = "Waiting";
+        public const string Confirm = "Confirm";
+        public const string Transporting = "Transporting";
         public const string Complete = "Complete";
     }
 }

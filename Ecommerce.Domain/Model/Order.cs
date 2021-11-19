@@ -9,6 +9,7 @@ namespace Ecommerce.Domain.Model
     {
         public Order()
         {
+            OrderLogs = new HashSet<OrderLog>();
             OrderDetails = new HashSet<OrderDetail>();
         }
         public string OrderCode { get; set; }

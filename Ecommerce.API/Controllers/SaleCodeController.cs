@@ -17,14 +17,15 @@ namespace Ecommerce.API.Controllers
         {
             _mediator = mediator;
         }
-        [Authorize(Roles = AppRole.SuperAdmin)]
+        [Authorize(Roles = $"{AppRole.SuperAdmin}, {AppRole.Admin}")]
         [HttpPost]
         public async Task<IActionResult> CreateSaleCode(CreateSaleCodeCommand command, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(command, cancellationToken);
-            return Ok(dto);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
         }
 
+        [Authorize(Roles = $"{AppRole.SuperAdmin}, {AppRole.Admin}")]
         [HttpGet()]
         public async Task<IActionResult> GetSaleCodes([FromQuery] GetSaleCodeQuery query, CancellationToken cancellationToken)
         {
@@ -32,6 +33,7 @@ namespace Ecommerce.API.Controllers
             return Ok(res);
         }
 
+        [Authorize(Roles = $"{AppRole.SuperAdmin}, {AppRole.Admin}")]
         [HttpPut()]
         public async Task<IActionResult> UpdateSaleCode(UpdateSaleCodeCommand command, CancellationToken cancellationToken)
         {
@@ -39,11 +41,19 @@ namespace Ecommerce.API.Controllers
             return Ok(res);
         }
 
+        [Authorize(Roles = $"{AppRole.SuperAdmin}, {AppRole.Admin}")]
         [HttpDelete("{code}")]
-        public async Task<IActionResult> DeleteSupplier(string code, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteSaleCode(string code, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(new DeleteSaleCodeCommand(code), cancellationToken);
-            return Ok(dto);
+            var result = await _mediator.Send(new DeleteSaleCodeCommand(code), cancellationToken);
+            return Ok(result);
+        }
+        
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetSaleCodeByCode(string code, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetSaleCodeByCodeQuery(code), cancellationToken);
+            return Ok(result);
         }
     }
 }

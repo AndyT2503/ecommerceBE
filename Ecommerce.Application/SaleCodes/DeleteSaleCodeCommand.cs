@@ -22,7 +22,7 @@ namespace Ecommerce.Application.SaleCodes
             var saleCode = await _mainDbContext.SaleCodes.FirstOrDefaultAsync(v => v.Code == request.code, cancellationToken);
             if (saleCode is null)
             {
-                throw new CoreException("Sale Code không tồn tại");
+                throw new CoreException("Mã giảm giá không tồn tại");
             }
             _mainDbContext.SaleCodes.Remove(saleCode);
             await _mainDbContext.SaveChangesAsync(cancellationToken);
