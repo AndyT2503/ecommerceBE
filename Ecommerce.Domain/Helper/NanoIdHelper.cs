@@ -4,7 +4,7 @@
     {
         public static string GenerateNanoId()
         {
-            return Nanoid.Nanoid.Generate(size: 10);
+            return Nanoid.Nanoid.Generate("1234567890abcdef", size: 10);
         }
     }
 }

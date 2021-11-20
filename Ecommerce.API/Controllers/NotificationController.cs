@@ -32,5 +32,12 @@ namespace Ecommerce.API.Controllers
             var dto = await _mediator.Send(new UpdateSeenNotificationCommand(id), cancellationToken);
             return Ok(dto);
         }
+        
+        [HttpGet("new-notification")]
+        public async Task<IActionResult> GetNumberNewNotification([FromQuery] GetNumberNewNotificationQuery query, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(query, cancellationToken);
+            return Ok(dto);
+        }
     }
 }

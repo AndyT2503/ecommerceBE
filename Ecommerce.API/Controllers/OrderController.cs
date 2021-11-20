@@ -23,10 +23,17 @@ namespace Ecommerce.API.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("tracking")]
-        public async Task<IActionResult> GetOrderTracking([FromQuery] GetOrderTrackingQuery query, CancellationToken cancellationToken)
+        [HttpGet("info")]
+        public async Task<IActionResult> CustomerGetOrderInfo([FromQuery] CustomerGetOrderInfoQuery query, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(query, cancellationToken);
+            return Ok(dto);
+        }
+        
+        [HttpPut("cancel")]
+        public async Task<IActionResult> CancelOrder(OrderCancelCommand command, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(command, cancellationToken);
             return Ok(dto);
         }
     }

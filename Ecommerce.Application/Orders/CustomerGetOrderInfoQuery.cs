@@ -13,25 +13,25 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Orders
 {
-    public class GetOrderTrackingQuery : IRequest<OrderDto>
+    public class CustomerGetOrderInfoQuery : IRequest<OrderDto>
     {
         public string PhoneNumber { get; init; }
         public string OrderCode { get; init; }
     }
 
-    internal class GetOrderTrackingHandler : IRequestHandler<GetOrderTrackingQuery, OrderDto>
+    internal class CustomerGetOrderInfoHandler : IRequestHandler<CustomerGetOrderInfoQuery, OrderDto>
     {
         private readonly MainDbContext _mainDbContext;
-        public GetOrderTrackingHandler(MainDbContext mainDbContext)
+        public CustomerGetOrderInfoHandler(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
         }
 
-        public async Task<OrderDto> Handle(GetOrderTrackingQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(CustomerGetOrderInfoQuery request, CancellationToken cancellationToken)
         {
             var order = await _mainDbContext.Orders.AsNoTracking()
                 .Where(x => x.PhoneNumber == request.PhoneNumber && x.OrderCode == request.OrderCode)
-                .Include(x => x.OrderDetails)
+                .Include(x => x.OrderDetails).ThenInclude(x => x.Category).ThenInclude(x => x.Product)
                 .Include(x => x.Sale)
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -41,8 +41,11 @@ namespace Ecommerce.Application.Orders
             }
 
             var estimatedDelivery = order.CreatedAt.Date.AddDays(1);
-            var priceSale = GetSalePrice(order.Sale, GetTotalPrice(order.OrderDetails));
-
+            var priceSale = 0M;
+            if (!string.IsNullOrEmpty(order.SaleCode))
+            {
+                priceSale = GetSalePrice(order.Sale, GetTotalPrice(order.OrderDetails));
+            }
             var orderTracking = new OrderDto
             {
                 Id = order.Id,
@@ -59,7 +62,15 @@ namespace Ecommerce.Application.Orders
                 SaleCode = order.SaleCode,
                 PriceSale = priceSale,
                 TotalPrice = order.Price,
-                OrderDetails = order.OrderDetails.Select(x => new OrderDetailDto { Id = x.Id, Price = x.Price, Quantity = x.Quantity })   
+                CreatedAt = order.CreatedAt,
+                OrderDetails = order.OrderDetails.Select(x => new OrderDetailDto
+                {
+                    Id = x.Id, 
+                    Price = x.Price, 
+                    Quantity = x.Quantity,
+                    Name = $"{x.Category.Product.Name} - {x.Category.Name}",
+                    Image = x.Category.Image
+                })   
             };
             return orderTracking;
         }
