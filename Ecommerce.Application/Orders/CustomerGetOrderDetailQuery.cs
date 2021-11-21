@@ -4,35 +4,34 @@ using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ecommerce.Application.Orders
 {
-    public class CustomerGetOrderInfoQuery : IRequest<OrderDto>
+    public class CustomerGetOrderDetailQuery : IRequest<OrderDto>
     {
         public string PhoneNumber { get; init; }
         public string OrderCode { get; init; }
     }
 
-    internal class CustomerGetOrderInfoHandler : IRequestHandler<CustomerGetOrderInfoQuery, OrderDto>
+    internal class CustomerGetOrderDetailHandler : IRequestHandler<CustomerGetOrderDetailQuery, OrderDto>
     {
         private readonly MainDbContext _mainDbContext;
-        public CustomerGetOrderInfoHandler(MainDbContext mainDbContext)
+        public CustomerGetOrderDetailHandler(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
         }
 
-        public async Task<OrderDto> Handle(CustomerGetOrderInfoQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(CustomerGetOrderDetailQuery request, CancellationToken cancellationToken)
         {
             var order = await _mainDbContext.Orders.AsNoTracking()
                 .Where(x => x.PhoneNumber == request.PhoneNumber && x.OrderCode == request.OrderCode)
                 .Include(x => x.OrderDetails).ThenInclude(x => x.Category).ThenInclude(x => x.Product)
                 .Include(x => x.Sale)
+                .Include(x => x.OrderLogs)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (order == null)
@@ -70,7 +69,12 @@ namespace Ecommerce.Application.Orders
                     Quantity = x.Quantity,
                     Name = $"{x.Category.Product.Name} - {x.Category.Name}",
                     Image = x.Category.Image
-                })   
+                }) ,
+                OrderLogs = order.OrderLogs.Select(x => new OrderLogDto
+                {
+                    Status = x.Status,
+                    TimeStamp = x.Timestamp
+                })
             };
             return orderTracking;
         }

@@ -22,6 +22,7 @@ using System;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Ecommerce.API.Configurations;
 
 namespace Ecommerce.API
 {
@@ -77,6 +78,10 @@ namespace Ecommerce.API
             services.ConfigureNotificationService();
             services.AddSingleton<ICurrentUser, CurrentUser>();
             services.AddSingleton<AuthService>();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -24,7 +24,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpGet("info")]
-        public async Task<IActionResult> CustomerGetOrderInfo([FromQuery] CustomerGetOrderInfoQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> CustomerGetOrderDetail([FromQuery] CustomerGetOrderDetailQuery query, CancellationToken cancellationToken)
         {
             var dto = await _mediator.Send(query, cancellationToken);
             return Ok(dto);

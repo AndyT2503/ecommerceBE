@@ -21,5 +21,6 @@ namespace Ecommerce.Application.Orders.Dto
         public decimal PriceSale { get; init; }
         public decimal TotalPrice { get; init; }
         public IEnumerable<OrderDetailDto> OrderDetails { get; init; }
+        public IEnumerable<OrderLogDto> OrderLogs { get; init; }
     }
 }
