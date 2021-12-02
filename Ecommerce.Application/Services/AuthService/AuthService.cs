@@ -1,4 +1,5 @@
-﻿using Ecommerce.Domain.Model;
+﻿using Ecommerce.Domain;
+using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.Exceptions;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;

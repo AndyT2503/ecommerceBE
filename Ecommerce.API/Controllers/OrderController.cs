@@ -19,22 +19,29 @@ namespace Ecommerce.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderCommand command, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(command, cancellationToken);
-            return Ok(dto);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetOrder([FromQuery]GetOrderQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
         }
 
         [HttpGet("info")]
         public async Task<IActionResult> CustomerGetOrderDetail([FromQuery] CustomerGetOrderDetailQuery query, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(query, cancellationToken);
-            return Ok(dto);
+            var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
         }
         
         [HttpPut("cancel")]
         public async Task<IActionResult> CancelOrder(OrderCancelCommand command, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(command, cancellationToken);
-            return Ok(dto);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
         }
     }
 }
